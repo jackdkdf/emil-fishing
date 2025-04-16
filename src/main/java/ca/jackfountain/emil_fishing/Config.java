@@ -1,4 +1,4 @@
-package ca.jackfountain.emilfishing;
+package ca.jackfountain.emil_fishing;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
