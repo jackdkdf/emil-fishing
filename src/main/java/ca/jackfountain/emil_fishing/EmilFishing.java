@@ -38,6 +38,8 @@ public class EmilFishing {
         IEventBus modEventBus = context.getModEventBus();
         modEventBus.addListener(this::commonSetup);
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(HudOverlay.class);
+
 
         // Register config (Forge)
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
