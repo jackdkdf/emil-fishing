@@ -35,12 +35,15 @@ public class Config {
             .comment("A list of items to log on common setup.")
             .defineListAllowEmpty("items", List.of("minecraft:iron_ingot"), Config::validateItemName);
 
+    private static final ForgeConfigSpec.BooleanValue DISPLAY_STRONG_HOOK = BUILDER.define("displayStrongHook", true);
+
     static final ForgeConfigSpec SPEC = BUILDER.build();
 
     public static boolean logDirtBlock;
     public static int magicNumber;
     public static String magicNumberIntroduction;
     public static Set<Item> items;
+    public static boolean displayStrongHook;
 
     private static boolean validateItemName(final Object obj) {
         return obj instanceof final String itemName && ForgeRegistries.ITEMS.containsKey(ResourceLocation.tryParse(itemName));
@@ -51,10 +54,16 @@ public class Config {
         logDirtBlock = LOG_DIRT_BLOCK.get();
         magicNumber = MAGIC_NUMBER.get();
         magicNumberIntroduction = MAGIC_NUMBER_INTRODUCTION.get();
-
         // convert the list of strings into a set of items
         items = ITEM_STRINGS.get().stream()
                 .map(itemName -> ForgeRegistries.ITEMS.getValue(ResourceLocation.tryParse(itemName)))
                 .collect(Collectors.toSet());
+
+        displayStrongHook = DISPLAY_STRONG_HOOK.get();
+    }
+
+    static void save() {
+        LOG_DIRT_BLOCK.set(logDirtBlock);
+        DISPLAY_STRONG_HOOK.set(displayStrongHook);
     }
 }
