@@ -1,32 +1,39 @@
 package ca.jackfountain.emil_fishing;
 
-import com.mojang.logging.LogUtils;
+import ca.jackfountain.emil_fishing.data.FishingSpot;
+import ca.jackfountain.emil_fishing.data.FishingSpotManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.CustomizeGuiOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.slf4j.Logger;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = EmilFishing.MODID, value = Dist.CLIENT)
 public class HudOverlay {
-    private static final Logger LOGGER = LogUtils.getLogger();
 
     @SubscribeEvent
     public static void onChatOverlay(CustomizeGuiOverlayEvent.Chat event) {
         Minecraft mc = Minecraft.getInstance();
         GuiGraphics guiGraphics = event.getGuiGraphics();
 
-        // Starting position (next to the chat box)
+        // Adjust text position
         int x = event.getPosX();
-        int y = event.getPosY() - 30; // Start above the chat
+        int y = event.getPosY() - 30;
 
-        String[] lines = {
-                "Line 1: Hello!",
-                "Line 2: More info",
-                String.format("Line 3: Y = %.1f", mc.player != null ? mc.player.getY() : 0)
-        };
+        Collection<FishingSpot> spots = FishingSpotManager.getInstance().getSpots();
+        String coordinates = String.format("XYZ: %.1f / %.1f / %.1f", mc.player.getX(), mc.player.getY(), mc.player.getZ());
+
+        List<String> linesList = new ArrayList<>();
+        linesList.add(coordinates);
+        linesList.add("----Fishing Spots----");
+        spots.forEach(spot -> linesList.add(String.valueOf(spot)));
+        String[] lines = linesList.toArray(new String[0]);
+
 
         for (String line : lines) {
             guiGraphics.drawString(mc.font, line, x, y, 0x00FFAA);
