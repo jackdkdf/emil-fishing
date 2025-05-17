@@ -24,19 +24,42 @@ public class ConfigScreen extends Screen {
                 .setParentScreen(parent)
                 .setTitle(Component.translatable("Fishing Perk Filters"))
                 .setTransparentBackground(true)
-                .setSavingRunnable(() -> {
-                        Config.save();
-                        LOGGER.info("SAVED: {}", Config.displayStrongHook);
-                        });
+                .setSavingRunnable(Config::save);
 
-
-        ConfigCategory general = builder.getOrCreateCategory(Component.translatable("category.emil_fishing.general"));
         ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 
-        // Add your config entries here
-        general.addEntry(entryBuilder.startBooleanToggle(Component.translatable("Display strong hook"), Config.displayStrongHook)
-                .setSaveConsumer(newValue -> Config.displayStrongHook = newValue)
-                .build());
+        // Hooks Category
+        ConfigCategory hooks = builder.getOrCreateCategory(Component.translatable("Hooks"));
+        for (int i = 0; i < Config.HOOK_KEYS.length; i++) {
+            final int index = i;
+            hooks.addEntry(entryBuilder.startBooleanToggle(
+                            Component.translatable("Display " + Config.HOOK_KEYS[index]),
+                            Config.hooksDisplay[index])
+                    .setSaveConsumer(newValue -> Config.hooksDisplay[index] = newValue)
+                    .build());
+        }
+
+        // Magnets Category
+        ConfigCategory magnets = builder.getOrCreateCategory(Component.translatable("Magnets"));
+        for (int i = 0; i < Config.MAGNET_KEYS.length; i++) {
+            final int index = i;
+            magnets.addEntry(entryBuilder.startBooleanToggle(
+                            Component.translatable("Display " + Config.MAGNET_KEYS[index]),
+                            Config.magnetsDisplay[index])
+                    .setSaveConsumer(newValue -> Config.magnetsDisplay[index] = newValue)
+                    .build());
+        }
+
+        // Chances Category
+        ConfigCategory chances = builder.getOrCreateCategory(Component.translatable("Chances"));
+        for (int i = 0; i < Config.CHANCE_KEYS.length; i++) {
+            final int index = i;
+            chances.addEntry(entryBuilder.startBooleanToggle(
+                            Component.translatable("Display " + Config.CHANCE_KEYS[index]),
+                            Config.chancesDisplay[index])
+                    .setSaveConsumer(newValue -> Config.chancesDisplay[index] = newValue)
+                    .build());
+        }
 
         this.minecraft.setScreen(builder.build());
     }

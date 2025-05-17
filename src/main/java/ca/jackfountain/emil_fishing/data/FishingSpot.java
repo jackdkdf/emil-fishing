@@ -60,8 +60,8 @@ public class FishingSpot {
         for(Quantifier quantifier : quantifiers){
             sQuantifiers = sQuantifiers + " " + quantifier;
         }
-
-        return pos + " " + stock + sQuantifiers + (lowerStability != null && upperStability != null ? " " + lowerStability + "-" + upperStability : "");
+        String coordinates = String.format("XYZ: %.1f / %.1f / %.1f", (double) pos.getX(), (double) pos.getY(), (double) pos.getZ());
+        return coordinates + " " + stock + sQuantifiers + (lowerStability != null && upperStability != null ? " " + lowerStability + "-" + upperStability : "");
 
     }
 }

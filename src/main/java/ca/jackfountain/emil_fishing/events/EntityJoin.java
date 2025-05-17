@@ -44,7 +44,7 @@ public class EntityJoin {
         Minecraft mc = Minecraft.getInstance();
         if (event.phase != TickEvent.Phase.END) return;
 
-        // Block for refreshing fishing spots on player teleport
+        // Code block for refreshing fishing spots on player teleport
         if (mc.player != null && mc.level != null) {
             double x = mc.player.getX();
             double y = mc.player.getY();
