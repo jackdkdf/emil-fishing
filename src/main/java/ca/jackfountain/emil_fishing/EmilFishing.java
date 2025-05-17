@@ -1,5 +1,7 @@
 package ca.jackfountain.emil_fishing;
 
+import ca.jackfountain.emil_fishing.gui.ConfigScreen;
+import ca.jackfountain.emil_fishing.gui.HudOverlay;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
@@ -36,13 +38,10 @@ public class EmilFishing {
                         (minecraft, parent) -> new ConfigScreen(parent)
                 )
         );
-
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         LOGGER.info("HELLO FROM COMMON SETUP");
-        LOGGER.info(Config.magicNumberIntroduction + Config.magicNumber);
-        Config.items.forEach((item) -> LOGGER.info("ITEM >> {}", item.toString()));
     }
 
     @SubscribeEvent

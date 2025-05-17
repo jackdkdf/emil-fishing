@@ -86,7 +86,7 @@ public class EntityJoin {
                 System.out.println("Position: " + pos);
 
                 // Optional: show in Minecraft chat
-                mc.gui.getChat().addMessage(Component.literal("FishingSpot detected: " + sText));
+                // mc.gui.getChat().addMessage(Component.literal("FishingSpot detected: " + sText));
 
                 return true; // Remove from pendingDisplays
             }

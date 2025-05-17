@@ -1,7 +1,6 @@
 package ca.jackfountain.emil_fishing;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -10,26 +9,12 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = EmilFishing.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Config {
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
-    private static final ForgeConfigSpec.IntValue MAGIC_NUMBER = BUILDER
-            .comment("A magic number")
-            .defineInRange("magicNumber", 42, 0, Integer.MAX_VALUE);
-
-    public static final ForgeConfigSpec.ConfigValue<String> MAGIC_NUMBER_INTRODUCTION = BUILDER
-            .comment("What you want the introduction message to be for the magic number")
-            .define("magicNumberIntroduction", "The magic number is... ");
-
-    private static final ForgeConfigSpec.ConfigValue<List<? extends String>> ITEM_STRINGS = BUILDER
-            .comment("A list of items to log on common setup.")
-            .defineListAllowEmpty("items", List.of("minecraft:iron_ingot"), Config::validateItemName);
-
-    // Array-based configuration entries
+    // Fishing spot display configs are each stored in a boolean array
     private static final ForgeConfigSpec.ConfigValue<List<? extends Boolean>> HOOKS_DISPLAY = BUILDER
             .comment("Display settings for hooks: [Strong, Wise, Glimmering, Greedy, Lucky]")
             .defineList("hooksDisplay", List.of(true, true, true, true, true), entry -> entry instanceof Boolean);
@@ -44,14 +29,10 @@ public class Config {
 
     static final ForgeConfigSpec SPEC = BUILDER.build();
 
-    // Translation keys for each display list
+    // Translation keys for each display list, used internally; no need to export to config file
     public static final String[] HOOK_KEYS = {"strong hook", "wise hook", "glimmering hook", "greedy hook", "lucky hook"};
     public static final String[] MAGNET_KEYS = {"xp magnet", "fish magnet", "pearl magnet", "treasure magnet", "spirit magnet"};
     public static final String[] CHANCE_KEYS = {"elusive fish chance", "wayfinder data", "pearl chance", "treasure chance", "spirit chance"};
-
-    public static int magicNumber;
-    public static String magicNumberIntroduction;
-    public static Set<Item> items;
 
     // Array fields for easy access
     public static boolean[] hooksDisplay = new boolean[5];
@@ -64,12 +45,6 @@ public class Config {
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
-        magicNumber = MAGIC_NUMBER.get();
-        magicNumberIntroduction = MAGIC_NUMBER_INTRODUCTION.get();
-        items = ITEM_STRINGS.get().stream()
-                .map(itemName -> ForgeRegistries.ITEMS.getValue(ResourceLocation.tryParse(itemName)))
-                .collect(Collectors.toSet());
-
         loadBooleanArray((List<Boolean>) HOOKS_DISPLAY.get(), hooksDisplay, "hooksDisplay");
         loadBooleanArray((List<Boolean>) MAGNETS_DISPLAY.get(), magnetsDisplay, "magnetsDisplay");
         loadBooleanArray((List<Boolean>) CHANCES_DISPLAY.get(), chancesDisplay, "chancesDisplay");
@@ -85,7 +60,7 @@ public class Config {
         }
     }
 
-    static void save() {
+    public static void save() {
         HOOKS_DISPLAY.set(arrayToList(hooksDisplay));
         MAGNETS_DISPLAY.set(arrayToList(magnetsDisplay));
         CHANCES_DISPLAY.set(arrayToList(chancesDisplay));

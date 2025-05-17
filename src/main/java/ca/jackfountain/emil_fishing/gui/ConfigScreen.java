@@ -1,5 +1,6 @@
-package ca.jackfountain.emil_fishing;
+package ca.jackfountain.emil_fishing.gui;
 
+import ca.jackfountain.emil_fishing.Config;
 import com.mojang.logging.LogUtils;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;

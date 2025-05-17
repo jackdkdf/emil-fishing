@@ -1,5 +1,6 @@
-package ca.jackfountain.emil_fishing;
+package ca.jackfountain.emil_fishing.gui;
 
+import ca.jackfountain.emil_fishing.EmilFishing;
 import ca.jackfountain.emil_fishing.data.FishingSpot;
 import ca.jackfountain.emil_fishing.data.FishingSpotManager;
 import net.minecraft.client.Minecraft;
