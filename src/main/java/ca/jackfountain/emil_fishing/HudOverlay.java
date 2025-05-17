@@ -2,7 +2,6 @@ package ca.jackfountain.emil_fishing;
 
 import ca.jackfountain.emil_fishing.data.FishingSpot;
 import ca.jackfountain.emil_fishing.data.FishingSpotManager;
-import ca.jackfountain.emil_fishing.data.Quantifier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraftforge.api.distmarker.Dist;
@@ -10,10 +9,9 @@ import net.minecraftforge.client.event.CustomizeGuiOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = EmilFishing.MODID, value = Dist.CLIENT)
 public class HudOverlay {
@@ -35,46 +33,37 @@ public class HudOverlay {
         filteredSpots.forEach(spot -> linesList.add(String.valueOf(spot)));
         String[] lines = linesList.toArray(new String[0]);
 
+        float scale = 0.75f;
+        int padding = 1;
+        int yOffset = y;
+
         for (String line : lines) {
-            guiGraphics.drawString(mc.font, line, x, y, 0x00FFAA);
-            y += mc.font.lineHeight + 2; // Move down for the next line
+            int textWidth = (int) (mc.font.width(line) * scale);
+            int textHeight = (int) (mc.font.lineHeight * scale);
+
+            // Draw translucent background with scaled width/height
+            guiGraphics.fill(
+                    x - padding,
+                    yOffset - padding,
+                    x + textWidth + padding,
+                    yOffset + textHeight + padding,
+                    0x88000000 // black, 53% opacity
+            );
+
+            // Draw scaled text
+            guiGraphics.pose().pushPose();
+            guiGraphics.pose().scale(scale, scale, 1.0f);
+            guiGraphics.drawString(
+                    mc.font,
+                    line,
+                    (int) (x / scale),
+                    (int) (yOffset / scale),
+                    0xFFFFFF
+            );
+            guiGraphics.pose().popPose();
+
+            yOffset += textHeight + 2; // Move down for the next line
         }
+
     }
-
-    private static Collection<FishingSpot> filterSpots(Collection<FishingSpot> spots) {
-        // Get all enabled filter keywords from config
-        Set<String> enabledKeywords = Stream.of(
-                        getEnabledKeywords(Config.hooksDisplay, Config.HOOK_KEYS),
-                        getEnabledKeywords(Config.magnetsDisplay, Config.MAGNET_KEYS),
-                        getEnabledKeywords(Config.chancesDisplay, Config.CHANCE_KEYS)
-                )
-                .flatMap(Collection::stream)
-                .collect(Collectors.toSet());
-
-        return spots.stream()
-                .filter(spot -> spot.getQuantifiers() != null && !spot.getQuantifiers().isEmpty())
-                .filter(spot -> spot.getQuantifiers().stream()
-                        .filter(Objects::nonNull)
-                        .map(Quantifier::type)
-                        .filter(Objects::nonNull)
-                        .map(String::toLowerCase)
-                        .anyMatch(type ->
-                                enabledKeywords.stream()
-                                        .anyMatch(type::contains)
-                        )
-                )
-                .collect(Collectors.toList());
-    }
-
-    private static Collection<String> getEnabledKeywords(boolean[] displaySettings, String[] keys) {
-        return IntStream.range(0, displaySettings.length)
-                .filter(i -> displaySettings[i])
-                .mapToObj(i -> keys[i])
-                .collect(Collectors.toList());
-    }
-
-
-
-
-
 }

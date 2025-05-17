@@ -1,12 +1,12 @@
 package ca.jackfountain.emil_fishing;
 
+import com.mojang.logging.LogUtils;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.slf4j.Logger;
-import com.mojang.logging.LogUtils;
 
 public class ConfigScreen extends Screen {
     private final Screen parent;

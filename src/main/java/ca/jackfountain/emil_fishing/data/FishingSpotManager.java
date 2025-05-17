@@ -2,12 +2,12 @@ package ca.jackfountain.emil_fishing.data;
 
 import ca.jackfountain.emil_fishing.Config;
 
-import java.time.LocalDateTime;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;

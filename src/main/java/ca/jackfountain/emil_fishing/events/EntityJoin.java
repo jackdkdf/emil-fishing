@@ -14,6 +14,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -91,18 +92,5 @@ public class EntityJoin {
             }
             return false; // Still waiting for synced text
         });
-//        event.registerAboveAll("my_overlay", (gui, guiGraphics, partialTick, screenWidth, screenHeight) -> {
-//            Minecraft mc = Minecraft.getInstance();
-//            if (mc.player != null) {
-//                guiGraphics.drawString(
-//                        mc.font,
-//                        "Your text",
-//                        0,  // x
-//                        0,  // y
-//                        0x00FF00 // color
-//                );
-//            }
-//        });
-
     }
 }

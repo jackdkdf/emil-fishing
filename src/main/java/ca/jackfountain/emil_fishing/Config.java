@@ -46,7 +46,7 @@ public class Config {
 
     // Translation keys for each display list
     public static final String[] HOOK_KEYS = {"strong hook", "wise hook", "glimmering hook", "greedy hook", "lucky hook"};
-    public static final String[] MAGNET_KEYS = {"strong magnet", "wise magnet", "glimmering magnet", "greedy magnet", "lucky magnet"};
+    public static final String[] MAGNET_KEYS = {"xp magnet", "fish magnet", "pearl magnet", "treasure magnet", "spirit magnet"};
     public static final String[] CHANCE_KEYS = {"elusive fish chance", "wayfinder data", "pearl chance", "treasure chance", "spirit chance"};
 
     public static int magicNumber;
