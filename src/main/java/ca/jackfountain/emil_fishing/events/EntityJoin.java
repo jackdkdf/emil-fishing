@@ -26,6 +26,8 @@ public class EntityJoin {
 
     private static final Set<Display.TextDisplay> pendingDisplays = new HashSet<>();
 
+    private static double lastX = Double.NaN, lastY = Double.NaN, lastZ = Double.NaN;
+
     @SubscribeEvent
     public static void onEntityJoinEvent(EntityJoinLevelEvent event) {
         Entity entity = event.getEntity();
@@ -40,7 +42,29 @@ public class EntityJoin {
 
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
+        Minecraft mc = Minecraft.getInstance();
         if (event.phase != TickEvent.Phase.END) return;
+
+        // Code block for refreshing fishing spots on player teleport
+        if (mc.player != null && mc.level != null) {
+            double x = mc.player.getX();
+            double y = mc.player.getY();
+            double z = mc.player.getZ();
+
+            if (!Double.isNaN(lastX)) {
+                double dx = x - lastX;
+                double dy = y - lastY;
+                double dz = z - lastZ;
+                double dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+                if (dist > 10) { // Threshold for a teleport
+                    FishingSpotManager.getInstance().clearSpots();
+                }
+            }
+            lastX = x;
+            lastY = y;
+            lastZ = z;
+        }
 
         // Clear FishingSpots once per real-life hour
         FishingSpotManager.getInstance().clearIfNewHour();
@@ -62,7 +86,7 @@ public class EntityJoin {
                 System.out.println("Position: " + pos);
 
                 // Optional: show in Minecraft chat
-                Minecraft.getInstance().gui.getChat().addMessage(Component.literal("FishingSpot detected: " + sText));
+                // mc.gui.getChat().addMessage(Component.literal("FishingSpot detected: " + sText));
 
                 return true; // Remove from pendingDisplays
             }

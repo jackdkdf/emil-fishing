@@ -1,14 +1,17 @@
 package ca.jackfountain.emil_fishing.data;
 
-import java.time.LocalDateTime;
+import ca.jackfountain.emil_fishing.Config;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class FishingSpotManager {
 
@@ -44,6 +47,8 @@ public class FishingSpotManager {
         return spots.values();
     }
 
+    public Collection<FishingSpot> getFilteredSpots() {return filterSpots(spots.values());}
+
     private void appendSpotToFile(FishingSpot spot) {
         String userHome = System.getProperty("user.home");
         Path filePath = Paths.get(userHome, "Downloads", "fishing_spots.txt");
@@ -62,5 +67,38 @@ public class FishingSpotManager {
             lastClearedHour = currentHour;
             clearSpots();
         }
+    }
+
+
+    private static Collection<FishingSpot> filterSpots(Collection<FishingSpot> spots) {
+        // Get all enabled filter keywords from config
+        Set<String> enabledKeywords = Stream.of(
+                        getEnabledKeywords(Config.hooksDisplay, Config.HOOK_KEYS),
+                        getEnabledKeywords(Config.magnetsDisplay, Config.MAGNET_KEYS),
+                        getEnabledKeywords(Config.chancesDisplay, Config.CHANCE_KEYS)
+                )
+                .flatMap(Collection::stream)
+                .collect(Collectors.toSet());
+
+        return spots.stream()
+                .filter(spot -> spot.getQuantifiers() != null && !spot.getQuantifiers().isEmpty())
+                .filter(spot -> spot.getQuantifiers().stream()
+                        .filter(Objects::nonNull)
+                        .map(Quantifier::type)
+                        .filter(Objects::nonNull)
+                        .map(String::toLowerCase)
+                        .anyMatch(type ->
+                                enabledKeywords.stream()
+                                        .anyMatch(type::contains)
+                        )
+                )
+                .collect(Collectors.toList());
+    }
+
+    private static Collection<String> getEnabledKeywords(boolean[] displaySettings, String[] keys) {
+        return IntStream.range(0, displaySettings.length)
+                .filter(i -> displaySettings[i])
+                .mapToObj(i -> keys[i])
+                .collect(Collectors.toList());
     }
 }
