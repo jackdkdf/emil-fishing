@@ -9,6 +9,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.CustomizeGuiOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraft.core.BlockPos;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,7 +32,7 @@ public class HudOverlay {
         List<String> linesList = new ArrayList<>();
         linesList.add(coordinates);
         linesList.add("----Fishing Spots----");
-        filteredSpots.forEach(spot -> linesList.add(String.valueOf(spot)));
+        filteredSpots.forEach(spot -> linesList.add(spot + calcEuclideanDistance(spot.getPos())));
         String[] lines = linesList.toArray(new String[0]);
 
         float scale = 0.75f;
@@ -66,5 +67,13 @@ public class HudOverlay {
             yOffset += textHeight + 2; // Move down for the next line
         }
 
+    }
+
+    private static String calcEuclideanDistance(BlockPos spotPos) {
+        Minecraft mc = Minecraft.getInstance();
+        double dx = mc.player.getX() - spotPos.getX();
+        double dy = mc.player.getY() - spotPos.getY();
+        double dz = mc.player.getZ() - spotPos.getZ();
+        return String.format(" %.1f blocks", Math.sqrt(dx * dx + dy * dy + dz * dz));
     }
 }
