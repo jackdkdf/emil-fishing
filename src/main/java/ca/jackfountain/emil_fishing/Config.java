@@ -34,6 +34,17 @@ public class Config {
     public static final String[] MAGNET_KEYS = {"xp magnet", "fish magnet", "pearl magnet", "treasure magnet", "spirit magnet"};
     public static final String[] CHANCE_KEYS = {"elusive fish chance", "wayfinder data", "pearl chance", "treasure chance", "spirit chance"};
 
+    public static final Integer RED = 0xfc5454;
+    public static final Integer BLUE = 0x2199f0;
+    public static final Integer PURPLE = 0x8632fc;
+    public static final Integer ORANGE = 0xfc7c3c;
+    public static final Integer GREEN = 0x23c525;
+
+    public static final Integer STOCK_COLOR_LOW = 0xf47404;
+    public static final Integer STOCK_COLOR_MEDIUM = 0xfcfc54;
+    public static final Integer STOCK_COLOR_HIGH = 0x54fc54;
+    public static final Integer STOCK_COLOR_VERY_HIGH = 0x68e3ea;
+    public static final Integer STOCK_COLOR_PLENTIFUL = 0xac6cfc;
     // Array fields for easy access
     public static boolean[] hooksDisplay = new boolean[5];
     public static boolean[] magnetsDisplay = new boolean[5];

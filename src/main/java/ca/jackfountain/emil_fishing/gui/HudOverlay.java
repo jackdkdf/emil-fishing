@@ -1,5 +1,6 @@
 package ca.jackfountain.emil_fishing.gui;
 
+import ca.jackfountain.emil_fishing.Config;
 import ca.jackfountain.emil_fishing.EmilFishing;
 import ca.jackfountain.emil_fishing.data.FishingSpot;
 import ca.jackfountain.emil_fishing.data.FishingSpotManager;
@@ -19,11 +20,37 @@ import java.util.Map;
 
 @Mod.EventBusSubscriber(modid = EmilFishing.MODID, value = Dist.CLIENT)
 public class HudOverlay {
-    private static final Map<String, Integer> COLOR_MAPPING = Map.of(
-            "Fishing Spots", 0x00FF00,  // Green
-            "XYZ:", 0xADD8E6,          // Light Blue
-            "blocks", 0xFFA500,        // Orange
-            "----", 0xFFFFFF           // White
+    private static final Map<String, Integer> COLOR_MAPPING = Map.ofEntries(
+            Map.entry("Fishing Spots", 0xfce464),
+            Map.entry("XYZ:", 0xADD8E6),
+            Map.entry("blocks", 0x38BCAE),
+
+            Map.entry("strong hook", Config.RED),
+            Map.entry("xp magnet", Config.RED),
+            Map.entry("elusive fish chance", Config.RED),
+
+            Map.entry("wise hook", Config.BLUE),
+            Map.entry("fish magnet", Config.BLUE),
+            Map.entry("fish chance", Config.BLUE),
+            Map.entry("wayfinder data", Config.BLUE),
+
+            Map.entry("glimmering hook", Config.PURPLE),
+            Map.entry("pearl magnet", Config.PURPLE),
+            Map.entry("pearl chance", Config.PURPLE),
+
+            Map.entry("greedy hook", Config.ORANGE),
+            Map.entry("treasure magnet", Config.ORANGE),
+            Map.entry("treasure chance", Config.ORANGE),
+
+            Map.entry("lucky hook", Config.GREEN),
+            Map.entry("spirit magnet", Config.GREEN),
+            Map.entry("spirit chance", Config.GREEN),
+
+            Map.entry("low", Config.STOCK_COLOR_LOW),
+            Map.entry("medium", Config.STOCK_COLOR_MEDIUM),
+            Map.entry("high", Config.STOCK_COLOR_HIGH),
+            Map.entry("very high", Config.STOCK_COLOR_VERY_HIGH),
+            Map.entry("plentiful", Config.STOCK_COLOR_PLENTIFUL)
     );
 
     @SubscribeEvent
@@ -94,9 +121,9 @@ public class HudOverlay {
 
             yOffset += textHeight + 2; // Move down for the next line
         }
+    }
 
-    private static void drawTextSegment(GuiGraphics gui, Font font, String text,
-                                        int x, int y, int color) {
+    private static void drawTextSegment(GuiGraphics gui, Font font, String text, int x, int y, int color) {
         gui.drawString(
                 font,
                 text,
