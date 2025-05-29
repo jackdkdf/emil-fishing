@@ -62,6 +62,17 @@ public class ConfigScreen extends Screen {
                     .build());
         }
 
+        // Stabilities Category
+        ConfigCategory stabilities = builder.getOrCreateCategory(Component.translatable("Stabilities"));
+        for (int i = 0; i < Config.STABILITY_KEYS.length; i++) {
+            final int index = i;
+            stabilities.addEntry(entryBuilder.startBooleanToggle(
+                            Component.translatable("Display " + Config.STABILITY_KEYS[index]),
+                            Config.stabilitiesDisplay[index])
+                    .setSaveConsumer(newValue -> Config.stabilitiesDisplay[index] = newValue)
+                    .build());
+        }
+
         this.minecraft.setScreen(builder.build());
     }
 }

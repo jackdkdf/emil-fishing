@@ -113,24 +113,24 @@ public class FishingSpot {
         );
 
         if (quantifierTypeList.contains("treasure chance")) {
-            return treasureStabilityMap.getOrDefault(lowerStability + "-" + upperStability, Config.STOCK_COLOR_LOW);
+            return treasureStabilityMap.getOrDefault(lowerStability + "-" + upperStability, Config.STOCK_COLOR_VERY_HIGH);
         }
         else if (quantifierTypeList.contains("spirit chance")) {
-            return spiritStabilityMap.getOrDefault(lowerStability + "-" + upperStability, Config.STOCK_COLOR_LOW);
+            return spiritStabilityMap.getOrDefault(lowerStability + "-" + upperStability, Config.STOCK_COLOR_VERY_HIGH);
         }
         else if (quantifierTypeList.contains("pearl chance")) {
-            return pearlStabilityMap.getOrDefault(lowerStability + "-" + upperStability, Config.STOCK_COLOR_LOW);
+            return pearlStabilityMap.getOrDefault(lowerStability + "-" + upperStability, Config.STOCK_COLOR_VERY_HIGH);
         }
         else if (quantifierTypeList.contains("elusive fish chance")) {
-            return elusiveStabilityMap.getOrDefault(lowerStability + "-" + upperStability, Config.STOCK_COLOR_LOW);
+            return elusiveStabilityMap.getOrDefault(lowerStability + "-" + upperStability, Config.STOCK_COLOR_VERY_HIGH);
         }
         else if (quantifierPercentList.contains(200)) {
-            return highMagnetStabilityMap.getOrDefault(lowerStability + "-" + upperStability, Config.STOCK_COLOR_LOW);
+            return highMagnetStabilityMap.getOrDefault(lowerStability + "-" + upperStability, Config.STOCK_COLOR_VERY_HIGH);
         }
         else if (quantifierTypeList.contains("fish chance")) {
-            return fishStabilityMap.getOrDefault(lowerStability + "-" + upperStability, Config.STOCK_COLOR_LOW);
+            return fishStabilityMap.getOrDefault(lowerStability + "-" + upperStability, Config.STOCK_COLOR_VERY_HIGH);
         }
-        return Config.STOCK_COLOR_LOW;
+        return Config.STOCK_COLOR_VERY_HIGH;
     }
 
 }

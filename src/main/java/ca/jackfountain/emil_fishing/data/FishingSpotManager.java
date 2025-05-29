@@ -80,6 +80,11 @@ public class FishingSpotManager {
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet());
 
+        Set<Integer> enabledStabilities = IntStream.range(0, Config.stabilitiesDisplay.length)
+                .filter(i -> Config.stabilitiesDisplay[i])
+                .mapToObj(i -> Config.STABILITY_HEX_KEYS[i])
+                .collect(Collectors.toSet());
+
         return spots.stream()
                 .filter(spot -> spot.getQuantifiers() != null && !spot.getQuantifiers().isEmpty())
                 .filter(spot -> spot.getQuantifiers().stream()
@@ -88,8 +93,7 @@ public class FishingSpotManager {
                         .filter(Objects::nonNull)
                         .map(String::toLowerCase)
                         .anyMatch(type ->
-                                enabledKeywords.stream()
-                                        .anyMatch(type::contains)
+                                enabledKeywords.stream().anyMatch(type::contains) || enabledStabilities.stream().anyMatch(spot.getStabilityColor()::equals)
                         )
                 )
                 .collect(Collectors.toList());
