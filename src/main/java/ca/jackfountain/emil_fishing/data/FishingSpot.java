@@ -1,8 +1,11 @@
 package ca.jackfountain.emil_fishing.data;
 
+import ca.jackfountain.emil_fishing.Config;
 import net.minecraft.core.BlockPos;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -64,5 +67,71 @@ public class FishingSpot {
         return coordinates + " " + stock + sQuantifiers + (lowerStability != null && upperStability != null ? " " + lowerStability + "-" + upperStability : "");
 
     }
+
+    public Integer getStabilityColor() {
+        List<String> quantifierTypeList = quantifiers.stream()
+                .map(Quantifier::type)
+                .toList();
+        List<Integer> quantifierPercentList = quantifiers.stream()
+                .map(Quantifier::percent)
+                .toList();
+
+        Map<String, Integer> treasureStabilityMap = Map.of(
+                "10-20", Config.STOCK_COLOR_MEDIUM,
+                "7-13", Config.STOCK_COLOR_HIGH,
+                "5-9", Config.STOCK_COLOR_VERY_HIGH
+        );
+
+        Map<String, Integer> spiritStabilityMap = Map.of(
+                "5-10", Config.STOCK_COLOR_MEDIUM,
+                "3-7", Config.STOCK_COLOR_HIGH,
+                "2-5", Config.STOCK_COLOR_VERY_HIGH
+        );
+
+        Map<String, Integer> pearlStabilityMap = Map.of(
+                "3-9", Config.STOCK_COLOR_MEDIUM,
+                "2-7", Config.STOCK_COLOR_HIGH,
+                "1-5", Config.STOCK_COLOR_VERY_HIGH
+        );
+
+        Map<String, Integer> elusiveStabilityMap = Map.of(
+                "3-9", Config.STOCK_COLOR_MEDIUM,
+                "2-7", Config.STOCK_COLOR_HIGH,
+                "1-5", Config.STOCK_COLOR_VERY_HIGH
+        );
+
+        Map<String, Integer> highMagnetStabilityMap = Map.of(
+                "3-7", Config.STOCK_COLOR_MEDIUM,
+                "2-5", Config.STOCK_COLOR_HIGH,
+                "1-4", Config.STOCK_COLOR_VERY_HIGH
+        );
+
+        Map<String, Integer> fishStabilityMap = Map.of(
+                "1-3", Config.STOCK_COLOR_MEDIUM,
+                "0-3", Config.STOCK_COLOR_HIGH,
+                "0-2", Config.STOCK_COLOR_VERY_HIGH
+        );
+
+        if (quantifierTypeList.contains("treasure chance")) {
+            return treasureStabilityMap.getOrDefault(lowerStability + "-" + upperStability, Config.STOCK_COLOR_LOW);
+        }
+        else if (quantifierTypeList.contains("spirit chance")) {
+            return spiritStabilityMap.getOrDefault(lowerStability + "-" + upperStability, Config.STOCK_COLOR_LOW);
+        }
+        else if (quantifierTypeList.contains("pearl chance")) {
+            return pearlStabilityMap.getOrDefault(lowerStability + "-" + upperStability, Config.STOCK_COLOR_LOW);
+        }
+        else if (quantifierTypeList.contains("elusive fish chance")) {
+            return elusiveStabilityMap.getOrDefault(lowerStability + "-" + upperStability, Config.STOCK_COLOR_LOW);
+        }
+        else if (quantifierPercentList.contains(200)) {
+            return highMagnetStabilityMap.getOrDefault(lowerStability + "-" + upperStability, Config.STOCK_COLOR_LOW);
+        }
+        else if (quantifierTypeList.contains("fish chance")) {
+            return fishStabilityMap.getOrDefault(lowerStability + "-" + upperStability, Config.STOCK_COLOR_LOW);
+        }
+        return Config.STOCK_COLOR_LOW;
+    }
+
 }
 

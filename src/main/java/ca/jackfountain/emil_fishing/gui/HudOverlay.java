@@ -65,15 +65,30 @@ public class HudOverlay {
         String coordinates = String.format("XYZ: %.1f / %.1f / %.1f", mc.player.getX(), mc.player.getY(), mc.player.getZ());
 
         List<String> lines = new ArrayList<>();
+
+        // List to allow access to stability colors later on, a little goofy but I need to somehow access the spot
+        // stability which is lost info once I convert the spot into a string line to be displayed
+        List<Integer> lineStabilityColor = new ArrayList<>();
+
         lines.add(coordinates);
         lines.add("----Fishing Spots----");
-        filteredSpots.forEach(spot -> lines.add(spot + calcEuclideanDistance(spot.getPos())));
+        lineStabilityColor.add(0xFFFFFF);
+        lineStabilityColor.add(0xFFFFFF); // Adding this twice to offset the lines we added above that
+        filteredSpots.forEach(
+                spot -> {
+                        lines.add(spot + calcEuclideanDistance(spot.getPos()));
+                        lineStabilityColor.add(spot.getStabilityColor());
+                }
+
+        );
 
         float scale = 0.75f;
         int padding = 1;
         int yOffset = y;
 
-        for (String line : lines) {
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
+
             int textWidth = (int) (mc.font.width(line) * scale);
             int textHeight = (int) (mc.font.lineHeight * scale);
 
@@ -92,6 +107,8 @@ public class HudOverlay {
             int currentX = (int) (x / scale);
 
             String remainingText = line;
+            int stabilityColor = lineStabilityColor.get(i);
+
             while (!remainingText.isEmpty()) {
                 String match = null;
                 int matchLength = 0;
@@ -110,13 +127,25 @@ public class HudOverlay {
                     currentX += mc.font.width(match);
                     remainingText = remainingText.substring(matchLength);
                 } else {
-                    // Draw the next character in default color
-                    String segment = remainingText.substring(0, 1);
-                    drawTextSegment(guiGraphics, mc.font, segment, currentX, (int) (yOffset / scale), 0xFFFFFF);
+                    int nextSpace = remainingText.indexOf(' ');
+                    String segment;
+                    if (nextSpace == 0) {
+                        segment = " ";
+                        remainingText = remainingText.substring(1);
+                    } else if (nextSpace > 0) {
+                        segment = remainingText.substring(0, nextSpace);
+                        remainingText = remainingText.substring(nextSpace);
+                    } else {
+                        segment = remainingText;
+                        remainingText = "";
+                    }
+
+                    int segColor = segment.contains("-") ? stabilityColor : 0xFFFFFF;
+                    drawTextSegment(guiGraphics, mc.font, segment, currentX, (int) (yOffset / scale), segColor);
                     currentX += mc.font.width(segment);
-                    remainingText = remainingText.substring(1);
                 }
             }
+
             guiGraphics.pose().popPose();
 
             yOffset += textHeight + 2; // Move down for the next line
