@@ -72,8 +72,8 @@ public class HudOverlay {
 
         lines.add(coordinates);
         lines.add("----Fishing Spots----");
-        lineStabilityColor.add(0xFFFFFF);
-        lineStabilityColor.add(0xFFFFFF); // Adding this twice to offset the lines we added above that
+        lineStabilityColor.add(Config.WHITE);
+        lineStabilityColor.add(Config.WHITE); // Adding this twice to offset the lines we added above that
         filteredSpots.forEach(
                 spot -> {
                         lines.add(spot + calcEuclideanDistance(spot.getPos()));
@@ -112,7 +112,7 @@ public class HudOverlay {
             while (!remainingText.isEmpty()) {
                 String match = null;
                 int matchLength = 0;
-                int color = 0xFFFFFF; // default color
+                int color = Config.WHITE;
 
                 for (Map.Entry<String, Integer> entry : COLOR_MAPPING.entrySet()) {
                     if (remainingText.startsWith(entry.getKey()) && entry.getKey().length() > matchLength) {
@@ -140,7 +140,7 @@ public class HudOverlay {
                         remainingText = "";
                     }
 
-                    int segColor = segment.contains("-") ? stabilityColor : 0xFFFFFF;
+                    int segColor = segment.contains("-") ? stabilityColor : Config.WHITE;
                     drawTextSegment(guiGraphics, mc.font, segment, currentX, (int) (yOffset / scale), segColor);
                     currentX += mc.font.width(segment);
                 }

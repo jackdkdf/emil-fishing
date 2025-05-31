@@ -112,25 +112,27 @@ public class FishingSpot {
                 "0-2", Config.STOCK_COLOR_VERY_HIGH
         );
 
+        String stabilityRange = lowerStability + "-" + upperStability;
+
         if (quantifierTypeList.contains("treasure chance")) {
-            return treasureStabilityMap.getOrDefault(lowerStability + "-" + upperStability, Config.STOCK_COLOR_VERY_HIGH);
+            return treasureStabilityMap.getOrDefault(stabilityRange, Config.WHITE);
         }
         else if (quantifierTypeList.contains("spirit chance")) {
-            return spiritStabilityMap.getOrDefault(lowerStability + "-" + upperStability, Config.STOCK_COLOR_VERY_HIGH);
+            return spiritStabilityMap.getOrDefault(stabilityRange, Config.WHITE);
         }
         else if (quantifierTypeList.contains("pearl chance")) {
-            return pearlStabilityMap.getOrDefault(lowerStability + "-" + upperStability, Config.STOCK_COLOR_VERY_HIGH);
+            return pearlStabilityMap.getOrDefault(stabilityRange, Config.WHITE);
         }
         else if (quantifierTypeList.contains("elusive fish chance")) {
-            return elusiveStabilityMap.getOrDefault(lowerStability + "-" + upperStability, Config.STOCK_COLOR_VERY_HIGH);
+            return elusiveStabilityMap.getOrDefault(stabilityRange, Config.WHITE);
         }
         else if (quantifierPercentList.contains(200)) {
-            return highMagnetStabilityMap.getOrDefault(lowerStability + "-" + upperStability, Config.STOCK_COLOR_VERY_HIGH);
+            return highMagnetStabilityMap.getOrDefault(stabilityRange, Config.WHITE);
         }
         else if (quantifierTypeList.contains("fish chance")) {
-            return fishStabilityMap.getOrDefault(lowerStability + "-" + upperStability, Config.STOCK_COLOR_VERY_HIGH);
+            return fishStabilityMap.getOrDefault(stabilityRange, Config.WHITE);
         }
-        return Config.STOCK_COLOR_VERY_HIGH;
+        return Config.WHITE;
     }
 
 }
