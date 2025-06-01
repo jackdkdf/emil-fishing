@@ -29,6 +29,14 @@ public class ConfigScreen extends Screen {
 
         ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 
+        // General Category
+        ConfigCategory general = builder.getOrCreateCategory(Component.translatable("General"));
+        general.addEntry(entryBuilder.startBooleanToggle(
+                        Component.translatable("Utilize AND filtering"),
+                        Config.andFilter)
+                .setSaveConsumer(newValue -> Config.andFilter = newValue)
+                .build());
+
         // Hooks Category
         ConfigCategory hooks = builder.getOrCreateCategory(Component.translatable("Hooks"));
         for (int i = 0; i < Config.HOOK_KEYS.length; i++) {

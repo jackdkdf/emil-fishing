@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -36,7 +37,6 @@ public class FishingSpotManager {
         System.out.println("Added: " + spot);
         appendSpotToFile(spot);
     }
-
 
     public void clearSpots() {
         spots.clear();
@@ -69,9 +69,16 @@ public class FishingSpotManager {
         }
     }
 
-
     private static Collection<FishingSpot> filterSpots(Collection<FishingSpot> spots) {
         // Get all enabled filter keywords from config
+        return spots.stream()
+                .filter(spot -> spot.getQuantifiers() != null && !spot.getQuantifiers().isEmpty())
+                .filter(FishingSpotManager::matchesQuantifiers)
+                .collect(Collectors.toList());
+    }
+
+    private static boolean matchesQuantifiers(FishingSpot spot) {
+
         Set<String> enabledKeywords = Stream.of(
                         getEnabledKeywords(Config.hooksDisplay, Config.HOOK_KEYS),
                         getEnabledKeywords(Config.magnetsDisplay, Config.MAGNET_KEYS),
@@ -85,18 +92,19 @@ public class FishingSpotManager {
                 .mapToObj(i -> Config.STABILITY_HEX_KEYS[i])
                 .collect(Collectors.toSet());
 
-        return spots.stream()
-                .filter(spot -> spot.getQuantifiers() != null && !spot.getQuantifiers().isEmpty())
-                .filter(spot -> spot.getQuantifiers().stream()
-                        .filter(Objects::nonNull)
-                        .map(Quantifier::type)
-                        .filter(Objects::nonNull)
-                        .map(String::toLowerCase)
-                        .anyMatch(type ->
-                                enabledKeywords.stream().anyMatch(type::contains) || enabledStabilities.stream().anyMatch(spot.getStabilityColor()::equals)
-                        )
-                )
-                .collect(Collectors.toList());
+        Predicate<String> typePredicate = type ->
+                enabledKeywords.stream().anyMatch(type::contains)
+                        || enabledStabilities.stream().anyMatch(spot.getStabilityColor()::equals);
+
+        Stream<String> typeStream = spot.getQuantifiers().stream()
+                .filter(Objects::nonNull)
+                .map(Quantifier::type)
+                .filter(Objects::nonNull)
+                .map(String::toLowerCase);
+
+        return Config.andFilter
+                ? typeStream.allMatch(typePredicate)
+                : typeStream.anyMatch(typePredicate);
     }
 
     private static Collection<String> getEnabledKeywords(boolean[] displaySettings, String[] keys) {

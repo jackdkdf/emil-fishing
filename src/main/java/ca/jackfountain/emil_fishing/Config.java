@@ -1,11 +1,9 @@
 package ca.jackfountain.emil_fishing;
 
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +11,10 @@ import java.util.List;
 @Mod.EventBusSubscriber(modid = EmilFishing.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Config {
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+
+    private static final ForgeConfigSpec.ConfigValue<Boolean> AND_FILTER = BUILDER
+            .comment("Enable this to use AND across filter categories instead of OR")
+            .define("andFilter", false);
 
     // Fishing spot display configs are each stored in a boolean array
     private static final ForgeConfigSpec.ConfigValue<List<? extends Boolean>> HOOKS_DISPLAY = BUILDER
@@ -34,6 +36,7 @@ public class Config {
     static final ForgeConfigSpec SPEC = BUILDER.build();
 
     // Color values for text, used internally; no need to export to config file
+    public static final Integer WHITE = 0xffffff;
     public static final Integer RED = 0xfc5454;
     public static final Integer BLUE = 0x2199f0;
     public static final Integer PURPLE = 0x8632fc;
@@ -52,18 +55,16 @@ public class Config {
     public static final String[] STABILITY_KEYS = {"yellow", "green", "blue"};
     public static final Integer[] STABILITY_HEX_KEYS = {STOCK_COLOR_MEDIUM, STOCK_COLOR_HIGH, STOCK_COLOR_VERY_HIGH};
 
-    // Array fields for easy access
+    public static boolean andFilter;
     public static boolean[] hooksDisplay = new boolean[5];
     public static boolean[] magnetsDisplay = new boolean[5];
     public static boolean[] chancesDisplay = new boolean[5];
     public static boolean[] stabilitiesDisplay = new boolean[3];
 
-    private static boolean validateItemName(final Object obj) {
-        return obj instanceof final String itemName && ForgeRegistries.ITEMS.containsKey(ResourceLocation.tryParse(itemName));
-    }
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
+        andFilter = AND_FILTER.get();
         loadBooleanArray((List<Boolean>) HOOKS_DISPLAY.get(), hooksDisplay);
         loadBooleanArray((List<Boolean>) MAGNETS_DISPLAY.get(), magnetsDisplay);
         loadBooleanArray((List<Boolean>) CHANCES_DISPLAY.get(), chancesDisplay);
@@ -81,6 +82,7 @@ public class Config {
     }
 
     public static void save() {
+        AND_FILTER.set(andFilter);
         HOOKS_DISPLAY.set(arrayToList(hooksDisplay));
         MAGNETS_DISPLAY.set(arrayToList(magnetsDisplay));
         CHANCES_DISPLAY.set(arrayToList(chancesDisplay));
