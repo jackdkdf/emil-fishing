@@ -31,7 +31,7 @@ public class Config {
 
     private static final ForgeConfigSpec.ConfigValue<List<? extends Boolean>> STABILITIES_DISPLAY = BUILDER
             .comment("Display settings for stabilities: [Yellow, Green, Blue]")
-            .defineList("chancesDisplay", List.of(true, true, true), entry -> entry instanceof Boolean);
+            .defineList("stabilitiesDisplay", List.of(true, true, true), entry -> entry instanceof Boolean);
 
     static final ForgeConfigSpec SPEC = BUILDER.build();
 
