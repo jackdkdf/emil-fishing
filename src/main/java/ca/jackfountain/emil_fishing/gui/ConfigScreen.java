@@ -43,8 +43,8 @@ public class ConfigScreen extends Screen {
             final int index = i;
             hooks.addEntry(entryBuilder.startBooleanToggle(
                             Component.translatable("Display " + Config.HOOK_KEYS[index]),
-                            Config.hooksDisplay[index])
-                    .setSaveConsumer(newValue -> Config.hooksDisplay[index] = newValue)
+                            Config.hooksDisplay.get(index))
+                    .setSaveConsumer(newValue -> Config.hooksDisplay.set(index, newValue))
                     .build());
         }
 
@@ -54,8 +54,8 @@ public class ConfigScreen extends Screen {
             final int index = i;
             magnets.addEntry(entryBuilder.startBooleanToggle(
                             Component.translatable("Display " + Config.MAGNET_KEYS[index]),
-                            Config.magnetsDisplay[index])
-                    .setSaveConsumer(newValue -> Config.magnetsDisplay[index] = newValue)
+                            Config.magnetsDisplay.get(index))
+                    .setSaveConsumer(newValue -> Config.magnetsDisplay.set(index, newValue))
                     .build());
         }
 
@@ -65,8 +65,8 @@ public class ConfigScreen extends Screen {
             final int index = i;
             chances.addEntry(entryBuilder.startBooleanToggle(
                             Component.translatable("Display " + Config.CHANCE_KEYS[index]),
-                            Config.chancesDisplay[index])
-                    .setSaveConsumer(newValue -> Config.chancesDisplay[index] = newValue)
+                            Config.chancesDisplay.get(index))
+                    .setSaveConsumer(newValue -> Config.chancesDisplay.set(index, newValue))
                     .build());
         }
 
@@ -76,8 +76,8 @@ public class ConfigScreen extends Screen {
             final int index = i;
             stabilities.addEntry(entryBuilder.startBooleanToggle(
                             Component.translatable("Display " + Config.STABILITY_KEYS[index]),
-                            Config.stabilitiesDisplay[index])
-                    .setSaveConsumer(newValue -> Config.stabilitiesDisplay[index] = newValue)
+                            Config.stabilitiesDisplay.get(index))
+                    .setSaveConsumer(newValue -> Config.stabilitiesDisplay.set(index, newValue))
                     .build());
         }
 
