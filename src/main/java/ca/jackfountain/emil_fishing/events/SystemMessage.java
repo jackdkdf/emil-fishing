@@ -2,7 +2,6 @@ package ca.jackfountain.emil_fishing.events;
 
 import ca.jackfountain.emil_fishing.Config;
 import ca.jackfountain.emil_fishing.data.CatchData;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.SystemMessageReceivedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -13,10 +12,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
 import java.util.List;
 import java.util.Map;
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @Mod.EventBusSubscriber(Dist.CLIENT)
