@@ -1,7 +1,7 @@
 package ca.jackfountain.emil_fishing.events;
 
-import ca.jackfountain.emil_fishing.gui.ConfigScreen;
 import ca.jackfountain.emil_fishing.EmilFishing;
+import ca.jackfountain.emil_fishing.gui.ConfigScreen;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandSourceStack;

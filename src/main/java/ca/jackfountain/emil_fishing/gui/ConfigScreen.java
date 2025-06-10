@@ -29,6 +29,14 @@ public class ConfigScreen extends Screen {
 
         ConfigEntryBuilder entryBuilder = builder.entryBuilder();
 
+        // General Category
+        ConfigCategory general = builder.getOrCreateCategory(Component.translatable("General"));
+        general.addEntry(entryBuilder.startBooleanToggle(
+                        Component.translatable("Utilize AND filtering"),
+                        Config.andFilter)
+                .setSaveConsumer(newValue -> Config.andFilter = newValue)
+                .build());
+
         // Hooks Category
         ConfigCategory hooks = builder.getOrCreateCategory(Component.translatable("Hooks"));
         for (int i = 0; i < Config.HOOK_KEYS.length; i++) {
@@ -59,6 +67,17 @@ public class ConfigScreen extends Screen {
                             Component.translatable("Display " + Config.CHANCE_KEYS[index]),
                             Config.chancesDisplay[index])
                     .setSaveConsumer(newValue -> Config.chancesDisplay[index] = newValue)
+                    .build());
+        }
+
+        // Stabilities Category
+        ConfigCategory stabilities = builder.getOrCreateCategory(Component.translatable("Stabilities"));
+        for (int i = 0; i < Config.STABILITY_KEYS.length; i++) {
+            final int index = i;
+            stabilities.addEntry(entryBuilder.startBooleanToggle(
+                            Component.translatable("Display " + Config.STABILITY_KEYS[index]),
+                            Config.stabilitiesDisplay[index])
+                    .setSaveConsumer(newValue -> Config.stabilitiesDisplay[index] = newValue)
                     .build());
         }
 
