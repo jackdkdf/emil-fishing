@@ -87,8 +87,8 @@ public class FishingSpotManager {
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet());
 
-        Set<Integer> enabledStabilities = IntStream.range(0, Config.stabilitiesDisplay.length)
-                .filter(i -> Config.stabilitiesDisplay[i])
+        Set<Integer> enabledStabilities = IntStream.range(0, Config.stabilitiesDisplay.size())
+                .filter(i -> Config.stabilitiesDisplay.get(i))
                 .mapToObj(i -> Config.STABILITY_HEX_KEYS[i])
                 .collect(Collectors.toSet());
 
@@ -107,9 +107,9 @@ public class FishingSpotManager {
                 : typeStream.anyMatch(typePredicate);
     }
 
-    private static Collection<String> getEnabledKeywords(boolean[] displaySettings, String[] keys) {
-        return IntStream.range(0, displaySettings.length)
-                .filter(i -> displaySettings[i])
+    private static Collection<String> getEnabledKeywords(List<Boolean> displaySettings, String[] keys) {
+        return IntStream.range(0, displaySettings.size())
+                .filter(displaySettings::get)
                 .mapToObj(i -> keys[i])
                 .collect(Collectors.toList());
     }
