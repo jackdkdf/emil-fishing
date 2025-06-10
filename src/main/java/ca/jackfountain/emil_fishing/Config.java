@@ -44,6 +44,22 @@ public class Config {
             .comment("Enable this to use AND across filter categories instead of OR")
             .define("andFilter", false);
 
+    private static final ForgeConfigSpec.ConfigValue<Boolean> TOTAL_CATCHES_DISPLAY = BUILDER
+            .comment("Enable this to display total catches")
+            .define("totalCatchesDisplay", true);
+
+    private static final ForgeConfigSpec.ConfigValue<Boolean> FISH_DISPLAY = BUILDER
+            .comment("Enable this to display fish catches")
+            .define("fishDisplay", true);
+
+    private static final ForgeConfigSpec.ConfigValue<Boolean> ELUSIVE_FISH_DISPLAY = BUILDER
+            .comment("Enable this to display elusive fish catches")
+            .define("elusiveFishDisplay", true);
+
+    private static final ForgeConfigSpec.ConfigValue<Boolean> SPECIAL_CATCH_DISPLAY = BUILDER
+            .comment("Enable this to display special catches")
+            .define("specialDisplay", true);
+
     // Fishing spot display configs are each stored in a boolean array
     private static final ForgeConfigSpec.ConfigValue<List<? extends Boolean>> HOOKS_DISPLAY = BUILDER
             .comment("Display settings for hooks: [Strong, Wise, Glimmering, Greedy, Lucky]")
@@ -101,6 +117,10 @@ public class Config {
 
     // Config values (Lists, no arrays)
     public static boolean andFilter;
+    public static boolean totalCatchesDisplay;
+    public static boolean fishDisplay;
+    public static boolean elusiveFishDisplay;
+    public static boolean specialDisplay;
 
     public static List<Boolean> hooksDisplay = new ArrayList<>();
     public static List<Boolean> magnetsDisplay = new ArrayList<>();
@@ -119,6 +139,10 @@ public class Config {
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
         andFilter = AND_FILTER.get();
+        totalCatchesDisplay = TOTAL_CATCHES_DISPLAY.get();
+        fishDisplay = FISH_DISPLAY.get();
+        elusiveFishDisplay = ELUSIVE_FISH_DISPLAY.get();
+        specialDisplay = SPECIAL_CATCH_DISPLAY.get();
 
         hooksDisplay      = validateList((List<Boolean>) HOOKS_DISPLAY.get(),      HOOK_KEYS.length,      true);
         magnetsDisplay    = validateList((List<Boolean>) MAGNETS_DISPLAY.get(),    MAGNET_KEYS.length,    true);
@@ -140,6 +164,10 @@ public class Config {
 
     public static void save() {
         AND_FILTER.set(andFilter);
+        TOTAL_CATCHES_DISPLAY.set(totalCatchesDisplay);
+        FISH_DISPLAY.set(fishDisplay);
+        ELUSIVE_FISH_DISPLAY.set(elusiveFishDisplay);
+        SPECIAL_CATCH_DISPLAY.set(specialDisplay);
         HOOKS_DISPLAY.set(hooksDisplay);
         MAGNETS_DISPLAY.set(magnetsDisplay);
         CHANCES_DISPLAY.set(chancesDisplay);

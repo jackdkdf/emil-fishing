@@ -1,11 +1,14 @@
 package ca.jackfountain.emil_fishing.events;
 
 import ca.jackfountain.emil_fishing.Config;
+import ca.jackfountain.emil_fishing.EmilFishing;
 import ca.jackfountain.emil_fishing.data.CatchData;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.SystemMessageReceivedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -18,18 +21,23 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-@Mod.EventBusSubscriber(Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = EmilFishing.MODID, value = Dist.CLIENT)
 public class SystemMessage {
 
     @SubscribeEvent
     public static void onSystemMessageReceivedEventEvent(SystemMessageReceivedEvent event) {
+        if (FMLEnvironment.dist != Dist.CLIENT) return;
+        if (Minecraft.getInstance().level == null) return;
+
         String msg = event.getMessage().getString();
         if (!msg.contains("(\uE138) You caught:")) return;
 
         Config.totalCatches = Config.totalCatches + 1;
-        Pattern catchPattern = Pattern.compile("(\uE138) You caught: \\[(.*?)]");
+        Pattern catchPattern = Pattern.compile(".*\\(\uE138\\) You caught: \\[(.*?)]\\.*");
         Matcher matcher = catchPattern.matcher(msg);
+        if (!matcher.find()) return;
         String catchName = matcher.group(1);
+
 
         if (CatchData.isFish(catchName)) {
             String fishName = CatchData.extractFishName(catchName);
@@ -51,7 +59,6 @@ public class SystemMessage {
         }
 
         Config.save();
-        appendTextToFile(msg);
     }
 
 

@@ -36,6 +36,26 @@ public class ConfigScreen extends Screen {
                         Config.andFilter)
                 .setSaveConsumer(newValue -> Config.andFilter = newValue)
                 .build());
+        general.addEntry(entryBuilder.startBooleanToggle(
+                        Component.translatable("Display total catches"),
+                        Config.totalCatchesDisplay)
+                .setSaveConsumer(newValue -> Config.totalCatchesDisplay = newValue)
+                .build());
+        general.addEntry(entryBuilder.startBooleanToggle(
+                        Component.translatable("Display fish catches"),
+                        Config.fishDisplay)
+                .setSaveConsumer(newValue -> Config.fishDisplay = newValue)
+                .build());
+        general.addEntry(entryBuilder.startBooleanToggle(
+                        Component.translatable("Display elusive fish catches"),
+                        Config.elusiveFishDisplay)
+                .setSaveConsumer(newValue -> Config.elusiveFishDisplay = newValue)
+                .build());
+        general.addEntry(entryBuilder.startBooleanToggle(
+                        Component.translatable("Display special catches"),
+                        Config.specialDisplay)
+                .setSaveConsumer(newValue -> Config.specialDisplay = newValue)
+                .build());
 
         // Hooks Category
         ConfigCategory hooks = builder.getOrCreateCategory(Component.translatable("Hooks"));

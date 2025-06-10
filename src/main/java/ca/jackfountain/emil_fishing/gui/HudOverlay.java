@@ -112,14 +112,17 @@ public class HudOverlay {
         int y = event.getPosY() - 20;
 
         final List<String> lines = new ArrayList<>();
-        lines.add(String.format("Total Catches: %d", Config.totalCatches));
-        addFishCatchLines(lines, "Fish Catches ----------", Config.fish);
-        addFishCatchLines(lines, "Elusive Fish Catches ---", Config.elusiveFish);
-        lines.add("Special Catches -------");
-        lines.add("Trash: " + joinInts(Config.trash));
-        lines.add("Pearls: " + joinInts(Config.pearls));
-        lines.add("Spirits: " + joinInts(Config.spirits));
-        lines.add("Treasures: " + joinInts(Config.treasures));
+        if (Config.totalCatchesDisplay) lines.add(String.format("Total Catches: %d", Config.totalCatches));
+        if (Config.fishDisplay) addFishCatchLines(lines, "Fish Catches ----------", Config.fish);
+        if (Config.elusiveFishDisplay) addFishCatchLines(lines, "Elusive Fish Catches ---", Config.elusiveFish);
+
+        if (Config.specialDisplay) {
+            lines.add("Special Catches -------");
+            lines.add("Trash: " + joinInts(Config.trash));
+            lines.add("Pearls: " + joinInts(Config.pearls));
+            lines.add("Spirits: " + joinInts(Config.spirits));
+            lines.add("Treasures: " + joinInts(Config.treasures));
+        }
 
         renderLines(guiGraphics, mc.font, lines, null, screenWidth, y, 0.6f, false);
     }
