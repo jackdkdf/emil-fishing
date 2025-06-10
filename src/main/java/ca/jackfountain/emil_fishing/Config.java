@@ -17,11 +17,19 @@ public class Config {
     public static final Integer PURPLE = 0x8632fc;
     public static final Integer ORANGE = 0xfc7c3c;
     public static final Integer GREEN = 0x23c525;
+
     public static final Integer STOCK_COLOR_LOW = 0xf47404;
     public static final Integer STOCK_COLOR_MEDIUM = 0xfcfc54;
     public static final Integer STOCK_COLOR_HIGH = 0x54fc54;
     public static final Integer STOCK_COLOR_VERY_HIGH = 0x68e3ea;
     public static final Integer STOCK_COLOR_PLENTIFUL = 0xac6cfc;
+
+    public static final Integer RARITY_COMMON = 0xfcfcfc;
+    public static final Integer RARITY_UNCOMMON = 0x1efc0c;
+    public static final Integer RARITY_RARE = 0x006ffc;
+    public static final Integer RARITY_EPIC = 0xa134eb;
+    public static final Integer RARITY_LEGENDARY = 0xfc7e00;
+    public static final Integer RARITY_MYTHIC = 0xf64141;
 
     // Translation keys for each display list, used internally; no need to export to config file
     public static final String[] HOOK_KEYS = {"strong hook", "wise hook", "glimmering hook", "greedy hook", "lucky hook"};
@@ -53,7 +61,11 @@ public class Config {
             .comment("Display settings for stabilities: [Yellow, Green, Blue]")
             .defineList("stabilitiesDisplay", List.of(true, true, true), entry -> entry instanceof Boolean);
 
-    // Fishing catch metrics are stored in integer arrays
+    // Fishing catch metrics
+    private static final ForgeConfigSpec.ConfigValue<Integer> TOTAL_CATCHES = BUILDER
+            .comment("Total number of catches")
+            .define("totalCatches", 0);
+
     private static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> PEARLS = BUILDER
             .comment("Pearls catch data array [Rough, Polished, Pristine]")
             .defineList("pearls", List.of(0, 0, 0), entry -> entry instanceof Integer);
@@ -68,7 +80,7 @@ public class Config {
 
     private static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> TRASH = BUILDER
             .comment("Trash catch data array [Common, Uncommon, Rare, Epic, Legendary, Mythic]")
-            .defineList("trash", List.of(0, 0, 0, 0, 0, 0), entry -> entry instanceof Integer);
+            .defineList("trash", List.of(0, 0, 0, 0, 0), entry -> entry instanceof Integer);
 
     // Fishes are stored in a matrix to categorize rarity and weight
     private static final ForgeConfigSpec.ConfigValue<List<List<Integer>>> FISH = BUILDER
@@ -89,10 +101,13 @@ public class Config {
 
     // Config values (Lists, no arrays)
     public static boolean andFilter;
+
     public static List<Boolean> hooksDisplay = new ArrayList<>();
     public static List<Boolean> magnetsDisplay = new ArrayList<>();
     public static List<Boolean> chancesDisplay = new ArrayList<>();
     public static List<Boolean> stabilitiesDisplay = new ArrayList<>();
+
+    public static int totalCatches;
 
     public static List<Integer> pearls = new ArrayList<>();
     public static List<Integer> treasures = new ArrayList<>();
@@ -110,10 +125,12 @@ public class Config {
         chancesDisplay    = validateList((List<Boolean>) CHANCES_DISPLAY.get(),    CHANCE_KEYS.length,    true);
         stabilitiesDisplay= validateList((List<Boolean>) STABILITIES_DISPLAY.get(),STABILITY_KEYS.length, true);
 
+        totalCatches = TOTAL_CATCHES.get();
+
         pearls    = validateList((List<Integer>) PEARLS.get(),    3, 0);
         treasures = validateList((List<Integer>) TREASURES.get(), 6, 0);
         spirits   = validateList((List<Integer>) SPIRITS.get(),   3, 0);
-        trash     = validateList((List<Integer>) TRASH.get(),     6, 0);
+        trash     = validateList((List<Integer>) TRASH.get(),     5, 0);
 
         fish = validate2DList(FISH.get(), 6, 4, 0);
         elusiveFish = validate2DList(ELUSIVE_FISH.get(), 6, 4, 0);
@@ -127,6 +144,7 @@ public class Config {
         MAGNETS_DISPLAY.set(magnetsDisplay);
         CHANCES_DISPLAY.set(chancesDisplay);
         STABILITIES_DISPLAY.set(stabilitiesDisplay);
+        TOTAL_CATCHES.set(totalCatches);
         PEARLS.set(pearls);
         TREASURES.set(treasures);
         SPIRITS.set(spirits);

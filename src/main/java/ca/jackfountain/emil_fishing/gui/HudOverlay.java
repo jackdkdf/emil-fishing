@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = EmilFishing.MODID, value = Dist.CLIENT)
 public class HudOverlay {
@@ -50,11 +51,27 @@ public class HudOverlay {
             Map.entry("medium", Config.STOCK_COLOR_MEDIUM),
             Map.entry("high", Config.STOCK_COLOR_HIGH),
             Map.entry("very high", Config.STOCK_COLOR_VERY_HIGH),
-            Map.entry("plentiful", Config.STOCK_COLOR_PLENTIFUL)
-    );
+            Map.entry("plentiful", Config.STOCK_COLOR_PLENTIFUL),
+
+            Map.entry("Total catches", 0x38BCAE),
+            Map.entry("Fish Catches", Config.BLUE),
+            Map.entry("Elusive Fish Catches", Config.RED),
+
+            Map.entry("Common", Config.RARITY_COMMON),
+            Map.entry("Uncommon", Config.RARITY_UNCOMMON),
+            Map.entry("Rare", Config.RARITY_RARE),
+            Map.entry("Epic", Config.RARITY_EPIC),
+            Map.entry("Legendary", Config.RARITY_LEGENDARY),
+            Map.entry("Mythic", Config.RARITY_MYTHIC),
+
+            Map.entry("Trash", 0x595959),
+            Map.entry("Pearls", Config.PURPLE),
+            Map.entry("Spirits", Config.GREEN),
+            Map.entry("Treasures", Config.ORANGE)
+            );
 
     @SubscribeEvent
-    public static void onChatOverlay(CustomizeGuiOverlayEvent.Chat event) {
+    public static void displayFishSpots(CustomizeGuiOverlayEvent.Chat event) {
         Minecraft mc = Minecraft.getInstance();
         GuiGraphics guiGraphics = event.getGuiGraphics();
 
@@ -148,7 +165,106 @@ public class HudOverlay {
 
             guiGraphics.pose().popPose();
 
-            yOffset += textHeight + 2; // Move down for the next line
+            yOffset += textHeight + 2;
+        }
+    }
+
+    @SubscribeEvent
+    public static void displayFishCatches(CustomizeGuiOverlayEvent.Chat event) {
+        Minecraft mc = Minecraft.getInstance();
+        GuiGraphics guiGraphics = event.getGuiGraphics();
+
+        int screenWidth = mc.getWindow().getGuiScaledWidth();
+        int y = event.getPosY() - 20;
+
+        List<String> lines = new ArrayList<>();
+
+        lines.add(String.format("Total Catches: %d", Config.totalCatches));
+        addFishCatchLines(lines, "Fish Catches-----------", Config.fish);
+        addFishCatchLines(lines, "Elusive Fish Catches----", Config.elusiveFish);
+        lines.add("Special Catches--------");
+        lines.add("Trash: " + Config.trash.stream().map(String::valueOf).collect(Collectors.joining("/")));
+        lines.add("Pearls: " + Config.pearls.stream().map(String::valueOf).collect(Collectors.joining("/")));
+        lines.add("Spirits: " + Config.spirits.stream().map(String::valueOf).collect(Collectors.joining("/")));
+        lines.add("Treasures: " + Config.treasures.stream().map(String::valueOf).collect(Collectors.joining("/")));
+
+        float scale = 0.6f;
+        int padding = 1;
+        int yOffset = y;
+
+        for (String line : lines) {
+            int textWidth = (int) (mc.font.width(line) * scale);
+            int textHeight = (int) (mc.font.lineHeight * scale);
+
+            int x = screenWidth - textWidth - padding;
+
+            // Draw translucent background
+            guiGraphics.fill(
+                    x - padding,
+                    yOffset - padding,
+                    x + textWidth + padding,
+                    yOffset + textHeight + padding,
+                    0x88000000 // black, 53% opacity
+            );
+
+            guiGraphics.pose().pushPose();
+            guiGraphics.pose().scale(scale, scale, 1.0f);
+
+            int currentX = (int) (x / scale);
+
+            String remainingText = line;
+
+            while (!remainingText.isEmpty()) {
+                String match = null;
+                int matchLength = 0;
+                int color = Config.WHITE;
+
+                for (Map.Entry<String, Integer> entry : COLOR_MAPPING.entrySet()) {
+                    if (remainingText.startsWith(entry.getKey()) && entry.getKey().length() > matchLength) {
+                        match = entry.getKey();
+                        matchLength = entry.getKey().length();
+                        color = entry.getValue();
+                    }
+                }
+
+                if (match != null) {
+                    drawTextSegment(guiGraphics, mc.font, match, currentX, (int) (yOffset / scale), color);
+                    currentX += mc.font.width(match);
+                    remainingText = remainingText.substring(matchLength);
+                } else {
+                    int nextSpace = remainingText.indexOf(' ');
+                    String segment;
+                    if (nextSpace == 0) {
+                        segment = " ";
+                        remainingText = remainingText.substring(1);
+                    } else if (nextSpace > 0) {
+                        segment = remainingText.substring(0, nextSpace);
+                        remainingText = remainingText.substring(nextSpace);
+                    } else {
+                        segment = remainingText;
+                        remainingText = "";
+                    }
+                    int segColor = Config.WHITE;
+                    drawTextSegment(guiGraphics, mc.font, segment, currentX, (int) (yOffset / scale), segColor);
+                    currentX += mc.font.width(segment);
+                }
+            }
+
+            guiGraphics.pose().popPose();
+
+            yOffset += textHeight + 2;
+        }
+    }
+
+    // Helper method to add fish catch lines
+    private static void addFishCatchLines(List<String> lines, String header, List<List<Integer>> fishData) {
+        String[] rarities = {"Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic"};
+        lines.add(header);
+        for (int i = 0; i < rarities.length; i++) {
+            String line = rarities[i] + ": " + fishData.get(i).stream()
+                    .map(String::valueOf)
+                    .collect(Collectors.joining("/"));
+            lines.add(line);
         }
     }
 
