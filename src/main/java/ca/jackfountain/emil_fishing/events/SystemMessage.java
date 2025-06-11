@@ -31,7 +31,6 @@ public class SystemMessage {
         if (Minecraft.getInstance().level == null) return;
 
         String msg = event.getMessage().getString();
-        appendTextToFile(msg);
         if (msg.contains("You've discovered a")) {
             Config.totalGrottos = Config.totalGrottos + 1;
             Config.save();

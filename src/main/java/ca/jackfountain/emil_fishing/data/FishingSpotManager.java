@@ -35,7 +35,6 @@ public class FishingSpotManager {
 
         spots.put(textDisplayId, spot);
         System.out.println("Added: " + spot);
-        appendSpotToFile(spot);
     }
 
     public void clearSpots() {
