@@ -49,6 +49,10 @@ public class FishingSpotManager {
 
     public Collection<FishingSpot> getFilteredSpots() {return filterSpots(spots.values());}
 
+    public boolean isGrotto() {
+        return spots.values().stream().noneMatch(spot -> spot.getStabilityColor().equals(Config.WHITE));
+    }
+
     private void appendSpotToFile(FishingSpot spot) {
         String userHome = System.getProperty("user.home");
         Path filePath = Paths.get(userHome, "Downloads", "fishing_spots.txt");

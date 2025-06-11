@@ -105,10 +105,40 @@ public class Config {
                     defaultFishMatrix(),
                     entry -> validateFishMatrix(entry)
             );
-
     private static final ForgeConfigSpec.ConfigValue<List<List<Integer>>> ELUSIVE_FISH = BUILDER
             .comment("Elusive fish catch data matrix (6 rows, 4 columns)")
             .define("elusiveFish",
+                    defaultFishMatrix(),
+                    entry -> validateFishMatrix(entry)
+            );
+
+    // Grotto catch metrics
+    private static final ForgeConfigSpec.ConfigValue<Integer> TOTAL_CATCHES_GROTTO = BUILDER
+            .comment("Total number of catches")
+            .define("totalCatchesGrotto", 0);
+
+    private static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> PEARLS_GROTTO = BUILDER
+            .comment("Pearls catch data array [Rough, Polished, Pristine]")
+            .defineList("pearlsGrotto", List.of(0, 0, 0), entry -> entry instanceof Integer);
+
+    private static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> TREASURES_GROTTO = BUILDER
+            .comment("Treasures catch data array [Common, Uncommon, Rare, Epic, Legendary, Mythic]")
+            .defineList("treasuresGrotto", List.of(0, 0, 0, 0, 0, 0), entry -> entry instanceof Integer);
+
+    private static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> SPIRITS_GROTTO = BUILDER
+            .comment("Spirits catch data array [Regular, Refined, Pure]")
+            .defineList("spiritsGrotto", List.of(0, 0, 0), entry -> entry instanceof Integer);
+
+    // Fishes are stored in a matrix to categorize rarity and weight
+    private static final ForgeConfigSpec.ConfigValue<List<List<Integer>>> FISH_GROTTO = BUILDER
+            .comment("Fish catch data matrix (6 rows, 4 columns)")
+            .define("fishGrotto",
+                    defaultFishMatrix(),
+                    entry -> validateFishMatrix(entry)
+            );
+    private static final ForgeConfigSpec.ConfigValue<List<List<Integer>>> ELUSIVE_FISH_GROTTO = BUILDER
+            .comment("Elusive fish catch data matrix (6 rows, 4 columns)")
+            .define("elusiveFishGrotto",
                     defaultFishMatrix(),
                     entry -> validateFishMatrix(entry)
             );
@@ -128,6 +158,7 @@ public class Config {
     public static List<Boolean> stabilitiesDisplay = new ArrayList<>();
 
     public static int totalCatches;
+    public static int totalCatchesGrotto;
 
     public static List<Integer> pearls = new ArrayList<>();
     public static List<Integer> treasures = new ArrayList<>();
@@ -135,6 +166,12 @@ public class Config {
     public static List<Integer> trash = new ArrayList<>();
     public static List<List<Integer>> fish = new ArrayList<>();
     public static List<List<Integer>> elusiveFish = new ArrayList<>();
+
+    public static List<Integer> pearlsGrotto = new ArrayList<>();
+    public static List<Integer> treasuresGrotto = new ArrayList<>();
+    public static List<Integer> spiritsGrotto = new ArrayList<>();
+    public static List<List<Integer>> fishGrotto = new ArrayList<>();
+    public static List<List<Integer>> elusiveFishGrotto = new ArrayList<>();
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
@@ -150,14 +187,22 @@ public class Config {
         stabilitiesDisplay= validateList((List<Boolean>) STABILITIES_DISPLAY.get(),STABILITY_KEYS.length, true);
 
         totalCatches = TOTAL_CATCHES.get();
+        totalCatchesGrotto = TOTAL_CATCHES_GROTTO.get();
 
         pearls    = validateList((List<Integer>) PEARLS.get(),    3, 0);
         treasures = validateList((List<Integer>) TREASURES.get(), 6, 0);
         spirits   = validateList((List<Integer>) SPIRITS.get(),   3, 0);
         trash     = validateList((List<Integer>) TRASH.get(),     5, 0);
 
-        fish = validate2DList(FISH.get(), 6, 4, 0);
+        fish        = validate2DList(FISH.get(), 6, 4, 0);
         elusiveFish = validate2DList(ELUSIVE_FISH.get(), 6, 4, 0);
+
+        pearlsGrotto    = validateList((List<Integer>) PEARLS_GROTTO.get(),    3, 0);
+        treasuresGrotto = validateList((List<Integer>) TREASURES_GROTTO.get(), 6, 0);
+        spiritsGrotto   = validateList((List<Integer>) SPIRITS_GROTTO.get(),   3, 0);
+
+        fishGrotto        = validate2DList(FISH_GROTTO.get(), 6, 4, 0);
+        elusiveFishGrotto = validate2DList(ELUSIVE_FISH_GROTTO.get(), 6, 4, 0);
 
     }
 
@@ -179,6 +224,12 @@ public class Config {
         TRASH.set(trash);
         FISH.set(fish);
         ELUSIVE_FISH.set(elusiveFish);
+        TOTAL_CATCHES_GROTTO.set(totalCatchesGrotto);
+        PEARLS_GROTTO.set(pearlsGrotto);
+        TREASURES_GROTTO.set(treasuresGrotto);
+        SPIRITS_GROTTO.set(spiritsGrotto);
+        FISH_GROTTO.set(fishGrotto);
+        ELUSIVE_FISH_GROTTO.set(elusiveFishGrotto);
     }
 
     private static List<List<Integer>> defaultFishMatrix() {
