@@ -77,62 +77,62 @@ public class FishingSpot {
                 .toList();
 
         Map<String, Integer> treasureStabilityMap = Map.of(
-                "10-20", Config.STOCK_COLOR_MEDIUM,
-                "7-13", Config.STOCK_COLOR_HIGH,
-                "5-9", Config.STOCK_COLOR_VERY_HIGH
+                "10-20", Config.Color.STOCK_MEDIUM,
+                "7-13", Config.Color.STOCK_HIGH,
+                "5-9", Config.Color.STOCK_VERY_HIGH
         );
 
         Map<String, Integer> spiritStabilityMap = Map.of(
-                "5-10", Config.STOCK_COLOR_MEDIUM,
-                "3-7", Config.STOCK_COLOR_HIGH,
-                "2-5", Config.STOCK_COLOR_VERY_HIGH
+                "5-10", Config.Color.STOCK_MEDIUM,
+                "3-7", Config.Color.STOCK_HIGH,
+                "2-5", Config.Color.STOCK_VERY_HIGH
         );
 
         Map<String, Integer> pearlStabilityMap = Map.of(
-                "3-9", Config.STOCK_COLOR_MEDIUM,
-                "2-7", Config.STOCK_COLOR_HIGH,
-                "1-5", Config.STOCK_COLOR_VERY_HIGH
+                "3-9", Config.Color.STOCK_MEDIUM,
+                "2-7", Config.Color.STOCK_HIGH,
+                "1-5", Config.Color.STOCK_VERY_HIGH
         );
 
         Map<String, Integer> elusiveStabilityMap = Map.of(
-                "3-9", Config.STOCK_COLOR_MEDIUM,
-                "2-7", Config.STOCK_COLOR_HIGH,
-                "1-5", Config.STOCK_COLOR_VERY_HIGH
+                "3-9", Config.Color.STOCK_MEDIUM,
+                "2-7", Config.Color.STOCK_HIGH,
+                "1-5", Config.Color.STOCK_VERY_HIGH
         );
 
         Map<String, Integer> highMagnetStabilityMap = Map.of(
-                "3-7", Config.STOCK_COLOR_MEDIUM,
-                "2-5", Config.STOCK_COLOR_HIGH,
-                "1-4", Config.STOCK_COLOR_VERY_HIGH
+                "3-7", Config.Color.STOCK_MEDIUM,
+                "2-5", Config.Color.STOCK_HIGH,
+                "1-4", Config.Color.STOCK_VERY_HIGH
         );
 
         Map<String, Integer> fishStabilityMap = Map.of(
-                "1-3", Config.STOCK_COLOR_MEDIUM,
-                "0-3", Config.STOCK_COLOR_HIGH,
-                "0-2", Config.STOCK_COLOR_VERY_HIGH
+                "1-3", Config.Color.STOCK_MEDIUM,
+                "0-3", Config.Color.STOCK_HIGH,
+                "0-2", Config.Color.STOCK_VERY_HIGH
         );
 
         String stabilityRange = lowerStability + "-" + upperStability;
 
         if (quantifierTypeList.contains("treasure chance")) {
-            return treasureStabilityMap.getOrDefault(stabilityRange, Config.WHITE);
+            return treasureStabilityMap.getOrDefault(stabilityRange, Config.Color.WHITE);
         }
         else if (quantifierTypeList.contains("spirit chance")) {
-            return spiritStabilityMap.getOrDefault(stabilityRange, Config.WHITE);
+            return spiritStabilityMap.getOrDefault(stabilityRange, Config.Color.WHITE);
         }
         else if (quantifierTypeList.contains("pearl chance")) {
-            return pearlStabilityMap.getOrDefault(stabilityRange, Config.WHITE);
+            return pearlStabilityMap.getOrDefault(stabilityRange, Config.Color.WHITE);
         }
         else if (quantifierTypeList.contains("elusive fish chance")) {
-            return elusiveStabilityMap.getOrDefault(stabilityRange, Config.WHITE);
+            return elusiveStabilityMap.getOrDefault(stabilityRange, Config.Color.WHITE);
         }
         else if (quantifierPercentList.contains(200)) {
-            return highMagnetStabilityMap.getOrDefault(stabilityRange, Config.WHITE);
+            return highMagnetStabilityMap.getOrDefault(stabilityRange, Config.Color.WHITE);
         }
         else if (quantifierTypeList.contains("fish chance")) {
-            return fishStabilityMap.getOrDefault(stabilityRange, Config.WHITE);
+            return fishStabilityMap.getOrDefault(stabilityRange, Config.Color.WHITE);
         }
-        return Config.WHITE;
+        return Config.Color.WHITE;
     }
 
 }

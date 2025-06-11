@@ -27,48 +27,48 @@ public class HudOverlay {
             Map.entry("XYZ:", 0xADD8E6),
             Map.entry("blocks", 0x38BCAE),
 
-            Map.entry("strong hook", Config.RED),
-            Map.entry("xp magnet", Config.RED),
-            Map.entry("elusive fish chance", Config.RED),
+            Map.entry("strong hook", Config.Color.RED),
+            Map.entry("xp magnet", Config.Color.RED),
+            Map.entry("elusive fish chance", Config.Color.RED),
 
-            Map.entry("wise hook", Config.BLUE),
-            Map.entry("fish magnet", Config.BLUE),
-            Map.entry("fish chance", Config.BLUE),
-            Map.entry("wayfinder data", Config.BLUE),
+            Map.entry("wise hook", Config.Color.BLUE),
+            Map.entry("fish magnet", Config.Color.BLUE),
+            Map.entry("fish chance", Config.Color.BLUE),
+            Map.entry("wayfinder data", Config.Color.BLUE),
 
-            Map.entry("glimmering hook", Config.PURPLE),
-            Map.entry("pearl magnet", Config.PURPLE),
-            Map.entry("pearl chance", Config.PURPLE),
+            Map.entry("glimmering hook", Config.Color.PURPLE),
+            Map.entry("pearl magnet", Config.Color.PURPLE),
+            Map.entry("pearl chance", Config.Color.PURPLE),
 
-            Map.entry("greedy hook", Config.ORANGE),
-            Map.entry("treasure magnet", Config.ORANGE),
-            Map.entry("treasure chance", Config.ORANGE),
+            Map.entry("greedy hook", Config.Color.ORANGE),
+            Map.entry("treasure magnet", Config.Color.ORANGE),
+            Map.entry("treasure chance", Config.Color.ORANGE),
 
-            Map.entry("lucky hook", Config.GREEN),
-            Map.entry("spirit magnet", Config.GREEN),
-            Map.entry("spirit chance", Config.GREEN),
+            Map.entry("lucky hook", Config.Color.GREEN),
+            Map.entry("spirit magnet", Config.Color.GREEN),
+            Map.entry("spirit chance", Config.Color.GREEN),
 
-            Map.entry("low", Config.STOCK_COLOR_LOW),
-            Map.entry("medium", Config.STOCK_COLOR_MEDIUM),
-            Map.entry("high", Config.STOCK_COLOR_HIGH),
-            Map.entry("very high", Config.STOCK_COLOR_VERY_HIGH),
-            Map.entry("plentiful", Config.STOCK_COLOR_PLENTIFUL),
+            Map.entry("low", Config.Color.STOCK_LOW),
+            Map.entry("medium", Config.Color.STOCK_MEDIUM),
+            Map.entry("high", Config.Color.STOCK_HIGH),
+            Map.entry("very high", Config.Color.STOCK_VERY_HIGH),
+            Map.entry("plentiful", Config.Color.STOCK_PLENTIFUL),
 
             Map.entry("Total catches", 0x38BCAE),
             Map.entry("Fish Catches", 0xfce464),
             Map.entry("Elusive Fish Catches", 0xfce464),
             Map.entry("Special Catches", 0xfce464),
-            Map.entry("Common", Config.RARITY_COMMON),
-            Map.entry("Uncommon", Config.RARITY_UNCOMMON),
-            Map.entry("Rare", Config.RARITY_RARE),
-            Map.entry("Epic", Config.RARITY_EPIC),
-            Map.entry("Legendary", Config.RARITY_LEGENDARY),
-            Map.entry("Mythic", Config.RARITY_MYTHIC),
+            Map.entry("Common", Config.Color.RARITY_COMMON),
+            Map.entry("Uncommon", Config.Color.RARITY_UNCOMMON),
+            Map.entry("Rare", Config.Color.RARITY_RARE),
+            Map.entry("Epic", Config.Color.RARITY_EPIC),
+            Map.entry("Legendary", Config.Color.RARITY_LEGENDARY),
+            Map.entry("Mythic", Config.Color.RARITY_MYTHIC),
 
             Map.entry("Trash", 0x737373),
-            Map.entry("Pearls", Config.PURPLE),
-            Map.entry("Spirits", Config.GREEN),
-            Map.entry("Treasures", Config.ORANGE)
+            Map.entry("Pearls", Config.Color.PURPLE),
+            Map.entry("Spirits", Config.Color.GREEN),
+            Map.entry("Treasures", Config.Color.ORANGE)
     );
 
     /**
@@ -90,8 +90,8 @@ public class HudOverlay {
 
         lines.add(coordinates);
         lines.add("--- Fishing Spots ---");
-        stabilityColors.add(Config.WHITE);
-        stabilityColors.add(Config.WHITE);
+        stabilityColors.add(Config.Color.WHITE);
+        stabilityColors.add(Config.Color.WHITE);
 
         spots.forEach(spot -> {
             lines.add(spot + calcDistanceString(spot.getPos()));
@@ -112,16 +112,31 @@ public class HudOverlay {
         int y = event.getPosY() - 20;
 
         final List<String> lines = new ArrayList<>();
-        if (Config.totalCatchesDisplay) lines.add(String.format("Total Catches: %d", Config.totalCatches));
-        if (Config.fishDisplay) addFishCatchLines(lines, "Fish Catches ----------", Config.fish);
-        if (Config.elusiveFishDisplay) addFishCatchLines(lines, "Elusive Fish Catches ---", Config.elusiveFish);
 
-        if (Config.specialDisplay) {
-            lines.add("Special Catches -------");
-            lines.add("Trash: " + joinInts(Config.trash));
-            lines.add("Pearls: " + joinInts(Config.pearls));
-            lines.add("Spirits: " + joinInts(Config.spirits));
-            lines.add("Treasures: " + joinInts(Config.treasures));
+        if (FishingSpotManager.getInstance().isGrotto()) {
+            if (Config.totalCatchesDisplay) lines.add(String.format("Total Grotto Catches: %d", Config.totalCatchesGrotto));
+            if (Config.fishDisplay) addFishCatchLines(lines, "Fish Catches ----------", Config.fishGrotto);
+            if (Config.elusiveFishDisplay) addFishCatchLines(lines, "Elusive Fish Catches ---", Config.elusiveFishGrotto);
+
+            if (Config.specialDisplay) {
+                lines.add("Special Catches -------");
+                lines.add("Pearls: " + joinInts(Config.pearlsGrotto));
+                lines.add("Spirits: " + joinInts(Config.spiritsGrotto));
+                lines.add("Treasures: " + joinInts(Config.treasuresGrotto));
+            }
+        }
+        else {
+            if (Config.totalCatchesDisplay) lines.add(String.format("Total Catches: %d", Config.totalCatches));
+            if (Config.fishDisplay) addFishCatchLines(lines, "Fish Catches ----------", Config.fish);
+            if (Config.elusiveFishDisplay) addFishCatchLines(lines, "Elusive Fish Catches ---", Config.elusiveFish);
+
+            if (Config.specialDisplay) {
+                lines.add("Special Catches -------");
+                lines.add("Trash: " + joinInts(Config.trash));
+                lines.add("Pearls: " + joinInts(Config.pearls));
+                lines.add("Spirits: " + joinInts(Config.spirits));
+                lines.add("Treasures: " + joinInts(Config.treasures));
+            }
         }
 
         renderLines(guiGraphics, mc.font, lines, null, screenWidth, y, 0.6f, false);
@@ -178,7 +193,7 @@ public class HudOverlay {
             int currentX = (int) (x / scale);
             String remainingText = line;
             final int stabilityColor = stabilityColors != null && i < stabilityColors.size()
-                    ? stabilityColors.get(i) : Config.WHITE;
+                    ? stabilityColors.get(i) : Config.Color.WHITE;
 
             while (!remainingText.isEmpty()) {
                 final ColorMatch match = findLongestColorMatch(remainingText);
@@ -199,7 +214,7 @@ public class HudOverlay {
                         segment = remainingText;
                         remainingText = "";
                     }
-                    final int segColor = segment.contains("-") ? stabilityColor : Config.WHITE;
+                    final int segColor = segment.contains("-") ? stabilityColor : Config.Color.WHITE;
                     drawTextSegment(guiGraphics, font, segment, currentX, (int) (yOffset / scale), segColor);
                     currentX += font.width(segment);
                 }
@@ -219,7 +234,7 @@ public class HudOverlay {
     private static ColorMatch findLongestColorMatch(String text) {
         String matchedKey = null;
         int maxLength = 0;
-        int color = Config.WHITE;
+        int color = Config.Color.WHITE;
 
         for (Map.Entry<String, Integer> entry : COLOR_MAPPING.entrySet()) {
             final String key = entry.getKey();
