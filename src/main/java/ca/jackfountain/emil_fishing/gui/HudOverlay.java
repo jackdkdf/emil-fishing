@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class HudOverlay {
 
     private static final Map<String, Integer> COLOR_MAPPING = Map.ofEntries(
-            Map.entry("Fishing Spots", 0xfce464),
+            Map.entry("Fishing Spots", Config.Color.YELLOW),
             Map.entry("XYZ:", 0xADD8E6),
             Map.entry("blocks", 0x38BCAE),
 
@@ -54,10 +54,9 @@ public class HudOverlay {
             Map.entry("very high", Config.Color.STOCK_VERY_HIGH),
             Map.entry("plentiful", Config.Color.STOCK_PLENTIFUL),
 
-            Map.entry("Total catches", 0x38BCAE),
-            Map.entry("Fish Catches", 0xfce464),
-            Map.entry("Elusive Fish Catches", 0xfce464),
-            Map.entry("Special Catches", 0xfce464),
+            Map.entry("Fish Catches", Config.Color.YELLOW),
+            Map.entry("Elusive Fish Catches", Config.Color.YELLOW),
+            Map.entry("Special Catches", Config.Color.YELLOW),
             Map.entry("Common", Config.Color.RARITY_COMMON),
             Map.entry("Uncommon", Config.Color.RARITY_UNCOMMON),
             Map.entry("Rare", Config.Color.RARITY_RARE),
@@ -76,6 +75,7 @@ public class HudOverlay {
      */
     @SubscribeEvent
     public static void displayFishSpots(CustomizeGuiOverlayEvent.Chat event) {
+        if (FishingSpotManager.getInstance().getSpots().isEmpty()) return; // do not display anything if there are no spots
         final Minecraft mc = Minecraft.getInstance();
         final GuiGraphics guiGraphics = event.getGuiGraphics();
         final int x = event.getPosX();
@@ -106,6 +106,7 @@ public class HudOverlay {
      */
     @SubscribeEvent
     public static void displayFishCatches(CustomizeGuiOverlayEvent.Chat event) {
+        if (FishingSpotManager.getInstance().getSpots().isEmpty()) return; // do not display anything if there are no spots
         final Minecraft mc = Minecraft.getInstance();
         final GuiGraphics guiGraphics = event.getGuiGraphics();
         final int screenWidth = mc.getWindow().getGuiScaledWidth();
@@ -113,6 +114,7 @@ public class HudOverlay {
 
         final List<String> lines = new ArrayList<>();
 
+        if(Config.totalGrottosDisplay) lines.add(String.format("Total grottos discovered: %d", Config.totalGrottos));
         if (FishingSpotManager.getInstance().isGrotto()) {
             if (Config.totalCatchesDisplay) lines.add(String.format("Total Grotto Catches: %d", Config.totalCatchesGrotto));
             if (Config.fishDisplay) addFishCatchLines(lines, "Fish Catches ----------", Config.fishGrotto);

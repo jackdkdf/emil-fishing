@@ -15,7 +15,7 @@ public class Config {
     // Color and Rarity Constants
     public static final class Color {
         public static final int WHITE = 0xffffff, RED = 0xfc5454, BLUE = 0x2199f0, PURPLE = 0x8632fc;
-        public static final int ORANGE = 0xfc7c3c, GREEN = 0x23c525;
+        public static final int ORANGE = 0xfc7c3c, GREEN = 0x23c525, YELLOW = 0xfce464;
         public static final int STOCK_LOW = 0xf47404, STOCK_MEDIUM = 0xfcfc54, STOCK_HIGH = 0x54fc54;
         public static final int STOCK_VERY_HIGH = 0x68e3ea, STOCK_PLENTIFUL = 0xac6cfc;
         public static final int RARITY_COMMON = 0xfcfcfc, RARITY_UNCOMMON = 0x1efc0c, RARITY_RARE = 0x006ffc;
@@ -35,6 +35,7 @@ public class Config {
     // Boolean config values
     private static final ForgeConfigSpec.ConfigValue<Boolean> AND_FILTER = bool("andFilter", false, "Enable this to use AND across filter categories instead of OR");
     private static final ForgeConfigSpec.ConfigValue<Boolean> TOTAL_CATCHES_DISPLAY = bool("totalCatchesDisplay", true, "Enable this to display total catches");
+    private static final ForgeConfigSpec.ConfigValue<Boolean> TOTAL_GROTTOS_DISPLAY = bool("totalGrottosDisplay", true, "Enable this to display total grottos");
     private static final ForgeConfigSpec.ConfigValue<Boolean> FISH_DISPLAY = bool("fishDisplay", true, "Enable this to display fish catches");
     private static final ForgeConfigSpec.ConfigValue<Boolean> ELUSIVE_FISH_DISPLAY = bool("elusiveFishDisplay", true, "Enable this to display elusive fish catches");
     private static final ForgeConfigSpec.ConfigValue<Boolean> SPECIAL_CATCH_DISPLAY = bool("specialDisplay", true, "Enable this to display special catches");
@@ -60,7 +61,6 @@ public class Config {
             intList("spirits", 3, "Spirits catch data array [Regular, Refined, Pure]");
     private static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> TRASH =
             intList("trash", 5, "Trash catch data array [Common, Uncommon, Rare, Epic, Legendary]");
-
     // Fish matrices
     private static final ForgeConfigSpec.ConfigValue<List<? extends List<? extends Integer>>> FISH =
             matrix("fish", 6, 4, "Fish catch data matrix (6 rows, 4 columns)");
@@ -68,6 +68,8 @@ public class Config {
             matrix("elusiveFish", 6, 4, "Elusive fish catch data matrix (6 rows, 4 columns)");
 
     // Grotto metrics (repeat of above)
+    private static final ForgeConfigSpec.ConfigValue<Integer> TOTAL_GROTTOS =
+            intVal("totalGrottos", 0, "Total number of grottos");
     private static final ForgeConfigSpec.ConfigValue<Integer> TOTAL_CATCHES_GROTTO =
             intVal("totalCatchesGrotto", 0, "Total number of catches (Grotto)");
     private static final ForgeConfigSpec.ConfigValue<List<? extends Integer>> PEARLS_GROTTO =
@@ -84,9 +86,9 @@ public class Config {
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 
     // Public mirrors
-    public static boolean andFilter, totalCatchesDisplay, fishDisplay, elusiveFishDisplay, specialDisplay;
+    public static boolean andFilter, totalCatchesDisplay, totalGrottosDisplay, fishDisplay, elusiveFishDisplay, specialDisplay;
     public static List<Boolean> hooksDisplay, magnetsDisplay, chancesDisplay, stabilitiesDisplay;
-    public static int totalCatches, totalCatchesGrotto;
+    public static int totalCatches, totalCatchesGrotto, totalGrottos;
     public static List<Integer> pearls, treasures, spirits, trash, pearlsGrotto, treasuresGrotto, spiritsGrotto;
     public static List<List<Integer>> fish, elusiveFish, fishGrotto, elusiveFishGrotto;
 
@@ -94,6 +96,7 @@ public class Config {
     static void onLoad(final ModConfigEvent event) {
         andFilter = AND_FILTER.get();
         totalCatchesDisplay = TOTAL_CATCHES_DISPLAY.get();
+        totalGrottosDisplay = TOTAL_GROTTOS_DISPLAY.get();
         fishDisplay = FISH_DISPLAY.get();
         elusiveFishDisplay = ELUSIVE_FISH_DISPLAY.get();
         specialDisplay = SPECIAL_CATCH_DISPLAY.get();
@@ -111,6 +114,7 @@ public class Config {
         fish        = toMatrix(FISH.get(), 6, 4, 0);
         elusiveFish = toMatrix(ELUSIVE_FISH.get(), 6, 4, 0);
 
+        totalGrottos = TOTAL_GROTTOS.get();
         totalCatchesGrotto = TOTAL_CATCHES_GROTTO.get();
         pearlsGrotto    = toList(PEARLS_GROTTO.get(), 3, 0);
         treasuresGrotto = toList(TREASURES_GROTTO.get(), 6, 0);
@@ -122,6 +126,7 @@ public class Config {
     public static void save() {
         AND_FILTER.set(andFilter);
         TOTAL_CATCHES_DISPLAY.set(totalCatchesDisplay);
+        TOTAL_GROTTOS_DISPLAY.set(totalGrottosDisplay);
         FISH_DISPLAY.set(fishDisplay);
         ELUSIVE_FISH_DISPLAY.set(elusiveFishDisplay);
         SPECIAL_CATCH_DISPLAY.set(specialDisplay);
@@ -139,6 +144,7 @@ public class Config {
         FISH.set(fish);
         ELUSIVE_FISH.set(elusiveFish);
 
+        TOTAL_GROTTOS.set(totalGrottos);
         TOTAL_CATCHES_GROTTO.set(totalCatchesGrotto);
         PEARLS_GROTTO.set(pearlsGrotto);
         TREASURES_GROTTO.set(treasuresGrotto);

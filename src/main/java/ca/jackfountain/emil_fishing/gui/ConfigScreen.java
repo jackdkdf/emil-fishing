@@ -37,6 +37,11 @@ public class ConfigScreen extends Screen {
                 .setSaveConsumer(newValue -> Config.andFilter = newValue)
                 .build());
         general.addEntry(entryBuilder.startBooleanToggle(
+                        Component.translatable("Display total grottos"),
+                        Config.totalGrottosDisplay)
+                .setSaveConsumer(newValue -> Config.totalGrottosDisplay = newValue)
+                .build());
+        general.addEntry(entryBuilder.startBooleanToggle(
                         Component.translatable("Display total catches"),
                         Config.totalCatchesDisplay)
                 .setSaveConsumer(newValue -> Config.totalCatchesDisplay = newValue)

@@ -32,6 +32,10 @@ public class SystemMessage {
 
         String msg = event.getMessage().getString();
         appendTextToFile(msg);
+        if (msg.contains("You've discovered a")) {
+            Config.totalGrottos = Config.totalGrottos + 1;
+            Config.save();
+        }
         if (!msg.contains("(\uE138) You caught:")) return;
 
         if (FishingSpotManager.getInstance().isGrotto()) Config.totalCatchesGrotto = Config.totalCatchesGrotto + 1;
