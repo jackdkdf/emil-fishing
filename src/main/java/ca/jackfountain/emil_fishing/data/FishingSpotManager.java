@@ -35,7 +35,6 @@ public class FishingSpotManager {
 
         spots.put(textDisplayId, spot);
         System.out.println("Added: " + spot);
-        appendSpotToFile(spot);
     }
 
     public void clearSpots() {
@@ -48,6 +47,10 @@ public class FishingSpotManager {
     }
 
     public Collection<FishingSpot> getFilteredSpots() {return filterSpots(spots.values());}
+
+    public boolean isGrotto() {
+        return spots.values().stream().noneMatch(spot -> spot.getStabilityColor().equals(Config.Color.WHITE));
+    }
 
     private void appendSpotToFile(FishingSpot spot) {
         String userHome = System.getProperty("user.home");

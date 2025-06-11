@@ -3,6 +3,7 @@ package ca.jackfountain.emil_fishing.events;
 import ca.jackfountain.emil_fishing.Config;
 import ca.jackfountain.emil_fishing.EmilFishing;
 import ca.jackfountain.emil_fishing.data.CatchData;
+import ca.jackfountain.emil_fishing.data.FishingSpotManager;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.SystemMessageReceivedEvent;
@@ -30,37 +31,59 @@ public class SystemMessage {
         if (Minecraft.getInstance().level == null) return;
 
         String msg = event.getMessage().getString();
+        if (msg.contains("You've discovered a")) {
+            Config.totalGrottos = Config.totalGrottos + 1;
+            Config.save();
+        }
         if (!msg.contains("(\uE138) You caught:")) return;
 
-        Config.totalCatches = Config.totalCatches + 1;
+        if (FishingSpotManager.getInstance().isGrotto()) Config.totalCatchesGrotto = Config.totalCatchesGrotto + 1;
+        else Config.totalCatches = Config.totalCatches + 1;
+
         Pattern catchPattern = Pattern.compile(".*\\(\uE138\\) You caught: \\[(.*?)]\\.*");
         Matcher matcher = catchPattern.matcher(msg);
         if (!matcher.find()) return;
         String catchName = matcher.group(1);
 
-
         if (CatchData.isFish(catchName)) {
             String fishName = CatchData.extractFishName(catchName);
             int rarity = CatchData.getFishRarity(fishName);
             int weight = CatchData.getFishWeight(catchName);
-
-            List<List<Integer>> fishMap = CatchData.isElusiveFish(fishName)
-                    ? Config.elusiveFish
-                    : Config.fish;
-
-            List<Integer> fishWeights = fishMap.get(rarity);
+            List<Integer> fishWeights = getFishWeights(fishName, rarity);
             fishWeights.set(weight, fishWeights.get(weight) + 1);
         }
         else {
-            incrementIfPresent(CatchData.trashTypeMap, Config.trash, catchName);
-            incrementIfPresent(CatchData.pearlTypeMap, Config.pearls, catchName);
-            incrementIfPresent(CatchData.spiritTypeMap, Config.spirits, catchName);
-            incrementIfPresent(CatchData.treasureTypeMap, Config.treasures, catchName);
+            if (FishingSpotManager.getInstance().isGrotto()) {
+                incrementIfPresent(CatchData.pearlTypeMap, Config.pearlsGrotto, catchName);
+                incrementIfPresent(CatchData.spiritTypeMap, Config.spiritsGrotto, catchName);
+                incrementIfPresent(CatchData.treasureTypeMap, Config.treasuresGrotto, catchName);
+            }
+            else {
+                incrementIfPresent(CatchData.trashTypeMap, Config.trash, catchName);
+                incrementIfPresent(CatchData.pearlTypeMap, Config.pearls, catchName);
+                incrementIfPresent(CatchData.spiritTypeMap, Config.spirits, catchName);
+                incrementIfPresent(CatchData.treasureTypeMap, Config.treasures, catchName);
+            }
         }
 
         Config.save();
     }
 
+    private static List<Integer> getFishWeights(String fishName, int rarity) {
+        List<List<Integer>> fishMap;
+
+        if (FishingSpotManager.getInstance().isGrotto()) {
+            fishMap = CatchData.isElusiveFish(fishName)
+                    ? Config.elusiveFishGrotto
+                    : Config.fishGrotto;
+        }
+        else {
+            fishMap = CatchData.isElusiveFish(fishName)
+                    ? Config.elusiveFish
+                    : Config.fish;
+        }
+        return fishMap.get(rarity);
+    }
 
     private static void incrementIfPresent(Map<String, Integer> typeMap, List<Integer> list, String catchName) {
         Integer index = typeMap.get(catchName);
